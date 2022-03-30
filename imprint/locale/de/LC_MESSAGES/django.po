@@ -1,0 +1,102 @@
+# imprint.
+# Copyright (C) 2017 wservices Ltd.
+# This file is distributed under the same license as the imprint package.
+# wservices Ltd. <info@wservices.ch>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-25 13:25+0000\n"
+"PO-Revision-Date: 2017-10-11 08:40+0000\n"
+"Last-Translator: Pascal Bader <info@wservices.ch>\n"
+"Language-Team: LANGUAGE <info@wservices.ch>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: imprint/models.py:11
+msgid "Company name"
+msgstr "Firmenname"
+
+#: imprint/models.py:12
+msgid "Company department"
+msgstr "Firmenabteilung"
+
+#: imprint/models.py:13
+msgid "First name"
+msgstr "Vorname"
+
+#: imprint/models.py:14
+msgid "Last name"
+msgstr "Nachname"
+
+#: imprint/models.py:15
+msgid "Email"
+msgstr "E-Mail"
+
+#: imprint/models.py:17 imprint/models.py:55
+msgid "Street"
+msgstr "Strasse"
+
+#: imprint/models.py:18 imprint/models.py:56
+msgid "Postal code"
+msgstr "Postleitzahl"
+
+#: imprint/models.py:19 imprint/models.py:57
+msgid "Place/City"
+msgstr "Ort/Stadt"
+
+#: imprint/models.py:20 imprint/models.py:58
+msgid "Country code"
+msgstr "Ländercode"
+
+#: imprint/models.py:21 imprint/models.py:59
+msgid "Country"
+msgstr "Land"
+
+#: imprint/models.py:23
+msgid "Phone"
+msgstr "Telefon"
+
+#: imprint/models.py:24
+msgid "Fax"
+msgstr "Fax"
+
+#: imprint/models.py:25
+msgid "VAT number"
+msgstr "MwSt-Nummer"
+
+#: imprint/models.py:27
+msgid "Logo"
+msgstr "Logo"
+
+#: imprint/models.py:28
+msgid "Logo invoice"
+msgstr "Rechnungslogo"
+
+#: imprint/models.py:30
+msgid "Stripe public key"
+msgstr ""
+
+#: imprint/models.py:53
+msgid "Name"
+msgstr "Name"
+
+#: imprint/models.py:61
+msgid "IBAN"
+msgstr "IBAN"
+
+#: imprint/models.py:62
+msgid "Number"
+msgstr "Nummer"
+
+#: imprint/models.py:63
+msgid "BIC"
+msgstr "BIC"
+
+#: imprint/models.py:65
+msgid "Currency ISO code"
+msgstr "Währungs ISO-Code"

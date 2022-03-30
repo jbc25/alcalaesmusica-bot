@@ -1,0 +1,1 @@
+~/.virtualenvs/alcalaesmusica-bot/bin/python manage.py runserver 127.0.0.1:62068 --settings=config.settings.local

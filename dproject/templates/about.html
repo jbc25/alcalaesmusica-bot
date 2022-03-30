@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Imprint' %}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>{% trans 'Imprint' %}</h1>
+      <p>
+        {% if site.ownership.company_name %}{{ site.ownership.company_name }}<br />{% endif %}
+        {{ site.ownership.first_name }} {{ site.ownership.last_name }}<br />
+        {{ site.ownership.postal_code }} {{ site.ownership.place }}<br />
+        {{ site.ownership.country_name }}<br />
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

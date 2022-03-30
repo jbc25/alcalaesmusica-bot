@@ -1,0 +1,158 @@
+# Django project translation.
+# Copyright (C) 2017 wservices Ltd.
+# This file is distributed under the same license as the django-installer package.
+# wservices Ltd. <info@wservices.ch>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-26 10:22+0000\n"
+"PO-Revision-Date: 2017-10-11 08:40+0000\n"
+"Last-Translator: Pascal Bader <info@wservices.ch>\n"
+"Language-Team: LANGUAGE <info@wservices.ch>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: dproject/templates/403.html:4 dproject/templates/403.html:10
+msgid "Permission denied"
+msgstr "طلب الاذن مرفوض"
+
+#: dproject/templates/403_csrf.html:3 dproject/templates/403_csrf.html:9
+msgid "CSRF verification failed. Request aborted."
+msgstr ""
+
+#: dproject/templates/404.html:4 dproject/templates/404.html:10
+msgid "Page not found"
+msgstr ""
+
+#: dproject/templates/404.html:11
+msgid "We're sorry, but the requested page could not be found."
+msgstr ""
+
+#: dproject/templates/500.html:4
+msgid "Server error (500)"
+msgstr ""
+
+#: dproject/templates/500.html:10
+msgid "Server Error <em>(500)</em>"
+msgstr ""
+
+#: dproject/templates/500.html:11
+msgid ""
+"There's been an error. It's been reported to the site administrators via "
+"email and should be fixed shortly. Thanks for your patience."
+msgstr ""
+
+#: dproject/templates/about.html:4 dproject/templates/about.html:10
+msgid "Imprint"
+msgstr "بصمة"
+
+#: dproject/templates/base.html:34
+msgid "About us"
+msgstr "معلومات عنا"
+
+#: dproject/templates/base.html:56
+msgid "Profile"
+msgstr "الملف الشخصي"
+
+#: dproject/templates/base.html:57
+msgid "Admin"
+msgstr ""
+
+#: dproject/templates/base.html:58
+msgid "Log out"
+msgstr ""
+
+#: dproject/templates/base.html:62 dproject/templates/registration/login.html:5
+#: dproject/templates/registration/login.html:9
+#: dproject/templates/registration/login.html:15
+#: dproject/templates/registration/password_reset_complete.html:11
+msgid "Log in"
+msgstr ""
+
+#: dproject/templates/base.html:86
+msgid "Installed by"
+msgstr "تم تثبيته بواسطة"
+
+#: dproject/templates/base.html:86
+msgid "one click installer"
+msgstr ""
+
+#: dproject/templates/email/base.html:63 dproject/templates/email/base.txt:1
+msgid "Dear "
+msgstr ""
+
+#: dproject/templates/email/base.html:66 dproject/templates/email/base.txt:3
+msgid "Yours sincerely"
+msgstr "تفضلوا بقبول فائق الاحترام"
+
+#: dproject/templates/email/base.html:67 dproject/templates/email/base.txt:4
+#, python-format
+msgid "The %(site_name)s team"
+msgstr "فريق %(site_name)s"
+
+#: dproject/templates/index.html:8
+msgid "Django successfully installed"
+msgstr "دجانغو تثبيت بنجاح"
+
+#: dproject/templates/registration/logged_out.html:5
+msgid "Logged out"
+msgstr ""
+
+#: dproject/templates/registration/logged_out.html:6
+msgid "Log in again"
+msgstr ""
+
+#: dproject/templates/registration/password_reset_complete.html:8
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr ""
+
+#: dproject/templates/registration/password_reset_confirm.html:10
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr ""
+
+#: dproject/templates/registration/password_reset_confirm.html:14
+msgid "Change my password"
+msgstr ""
+
+#: dproject/templates/registration/password_reset_confirm.html:18
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: dproject/templates/registration/password_reset_confirm.html:20
+msgid "Request a new password"
+msgstr "طلب كلمة مرور جديدة"
+
+#: dproject/templates/registration/password_reset_done.html:8
+msgid ""
+"We've emailed you instructions for setting your password, if an account "
+"exists with the email you entered. You should receive them shortly."
+msgstr ""
+
+#: dproject/templates/registration/password_reset_done.html:9
+msgid ""
+"If you don't receive an email, please make sure you've entered the address "
+"you registered with, and check your spam folder."
+msgstr ""
+
+#: dproject/templates/registration/password_reset_form.html:9
+msgid ""
+"Forgotten your password? Enter your email address below, and we'll email "
+"instructions for setting a new one."
+msgstr ""
+
+#: dproject/templates/registration/password_reset_form.html:14
+msgid "Reset my password"
+msgstr ""
+
+#~ msgid "Search on the site"
+#~ msgstr "البحث على الموقع"

@@ -1,0 +1,25 @@
+html, body {
+  height: 100%;
+}
+body {
+  padding-top: 4.5rem;
+}
+a {
+  color: #20AA76;
+}
+a:hover {
+  color: #092e20;
+  text-decoration: none;
+}
+.cms-toolbar-expanded {
+  height: calc(100vh - 46px);
+}
+.cms-structure-mode-structure {
+  min-height: calc(100vh - 46px);
+}
+.cms-toolbar-expanded .navbar {
+  top: 46px;
+}
+#page-content {
+  flex: 1 0 auto;
+}

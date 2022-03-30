@@ -1,0 +1,12 @@
+# Pro-tip: Try not to put anything here. Avoid dependencies in
+#	production that aren't in development.
+-r base.txt
+
+
+
+# WSGI Handler
+# ------------------------------------------------
+setuptools==60.0.0
+gevent==21.12.0
+greenlet==1.1.2
+gunicorn==20.1.0

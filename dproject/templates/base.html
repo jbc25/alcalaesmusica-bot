@@ -1,0 +1,107 @@
+{% load static i18n %}<!DOCTYPE html>
+
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{{ request.site.name }}{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+
+    <!-- CSS -->
+    <link href="{% static 'bootstrap4/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'fontawesome/css/all.min.css' %}" rel="stylesheet">
+
+    <!-- Project specific CSS -->
+    <link href="{% static 'css/project.css' %}" rel="stylesheet">
+    {% block css %}{% endblock %}
+  </head>
+
+  <body class="d-flex flex-column">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">alcalaesmusica-bot</a>
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarToggler">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item"><a class="nav-link" href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">{% trans 'About us' %}</a></li>
+          </ul>
+
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown-lang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ LANGUAGE_CODE }}</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown-lang">{% for lang in LANGUAGES %}
+                <form id="formsetLang{{ lang.0 }}" action="{% url 'set_language' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="language" value="{{ lang.0 }}" />
+                </form>
+                <a class="dropdown-item language_changer" id="{{ lang.0 }}" href="#">{{ lang.1 }}</a>
+              {% endfor %}
+              </div>
+            </li>
+            {% if request.user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown-user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span><i class="fas fa-user" aria-hidden="true"></i> {{ request.user }}</span>
+                  <span class="caret"></span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdown-user">
+                  <a class="dropdown-item" role="presentation" href="#">{% trans 'Profile' %}</a>
+                  <a class="dropdown-item" role="presentation" href="{% url 'password_change' %}">{% trans 'Change password' %}</a>
+                  {% if request.user.is_superuser %}<a class="dropdown-item" role="presentation" href="{% url 'admin:index' %}">{% trans 'Admin' %}</a>{% endif %}
+                  <a class="dropdown-item" role="presentation" href="{% url 'logout' %}">{% trans 'Log out' %}</a>
+                </div>
+              </li>
+            {% else %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">{% trans 'Log in' %}</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main role="main" id="page-content" class="content">
+      {% if messages %}
+        <div class="container">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block content %}
+      {% endblock content %}
+    </main>
+
+    <footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+      <div class="container">
+        <div class="row">
+          <div class="d-flex justify-content-start align-items-center flex-grow-1">
+            <small><a href="https://djangoeurope.com/">{% trans 'Installed by' %} <b>djangoeurope</b> {% trans 'one click installer' %}</a></small>
+          </div>
+          <div class="d-flex justify-content-end align-items-center">
+            <small>Version 0.2.0</small>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Third-party javascript libraries go here -->
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'jquery/js.cookie.js' %}"></script>
+    <script src="{% static 'bootstrap4/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
+
+    <!-- Project specific javascript -->
+    <script src="{% static 'js/project.js' %}"></script>
+    {% block javascript %}{% endblock javascript %}
+  </body>
+</html>
+

@@ -1,0 +1,72 @@
+{% load i18n %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <style type="text/css">
+    @font-face {
+      font-family: 'Lato', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+    }
+    body {
+      font-family: NotoSans, Verdana, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #000;
+    }
+    .content {
+      padding: 10px;
+      padding-bottom: 80px;
+    }
+    .menu {
+      padding: 10px;
+      margin: 0;
+      background-color: #3f3f3e;
+      color: #000;
+    }
+    .menu a {
+      color: #000;
+    }
+    h1.logo {
+      font-size: 30pt;
+    }
+    @media (max-width: 800px) {
+      h1.logo {
+        font-size: 16pt;
+      }
+    }
+    th {
+      background-color: #CCC;
+      border: 1px solid #000; vertical-align:top; overflow:hidden;
+    }
+    td {
+      border: 0;
+      padding: 5px;
+    }
+    .center {
+      margin: 0 auto;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="menu center">
+      <h1 class="logo">
+        <font color="#52ae32">{{ site.name }}</font>
+      </h1>
+    </div>
+
+    <div class="content">
+      {% block salutation %}
+        {% if user %}<p>{% trans 'Dear ' %}{{ user.get_full_name }}{% endif %}</p>
+      {% endblock salutation %}
+      {% block content %}{% endblock %}
+      <p>{% trans 'Yours sincerely' %}<br>
+      {% blocktrans with site_name=site.name %}The {{ site_name }} team{% endblocktrans %}</p>
+    </div>
+
+  </div>
+</body>
+</html>

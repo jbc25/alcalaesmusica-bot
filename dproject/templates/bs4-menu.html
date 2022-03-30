@@ -1,0 +1,21 @@
+{% load menu_tags %}
+{% load i18n menu_tags cache mptt_tags %}
+
+
+{% for child in children %}
+<li class="nav-item{% if child.selected or child.ancestor %} active{% endif %}{% if child.children %} dropdown{% endif %}">
+	{% if child.children %}
+	<a href="{{ child.get_absolute_url }}">{{ child.get_menu_title }} </a>
+	<span class="caret" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button"></span>
+	<ul class="dropdown-menu">
+		{% for grandchild in child.children %}
+			<li{% if grandchild.selected %} class="active"{% endif %}>
+				<a class="dropdown-item" href="{{ grandchild.attr.redirect_url|default:grandchild.get_absolute_url }}">{{ grandchild.get_menu_title }}</a>
+			</li>
+		{% endfor %}
+	</ul>
+	{% else %}
+	<a class="nav-link" href="{{ child.attr.redirect_url|default:child.get_absolute_url }}">{{ child.get_menu_title }}</a>
+	{% endif %}
+</li>
+{% endfor %}
