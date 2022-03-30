@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
@@ -35,3 +36,8 @@ if 'imprint' in settings.INSTALLED_APPS:
         path('about/', AboutView.as_view(), name='about'),
     ]
 
+
+from bot.views.main import AemBotView
+urlpatterns += [
+    path('webhook-telegram/', csrf_exempt(AemBotView.as_view())),
+]

@@ -9,3 +9,6 @@ psycopg2-binary<=2.9
 pytz
 six==1.16.0
 sorl-thumbnail==12.7.0
+
+python-telegram-bot==13.11
+requests==2.27.1
