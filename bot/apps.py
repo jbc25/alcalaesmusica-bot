@@ -40,11 +40,11 @@ class BotConfig(AppConfig):
         dispatcher = Dispatcher(bot, None, workers=0, use_context=True)
 
         dispatcher.add_handler(CommandHandler('start', handlers.start))
-        # dispatcher.add_handler(CommandHandler('eventos', handlers.events))
-        # dispatcher.add_handler(CommandHandler('finde', handlers.finde))
+        dispatcher.add_handler(CommandHandler('eventos', handlers.events))
+        dispatcher.add_handler(CommandHandler('finde', handlers.finde))
         # dispatcher.add_handler(CommandHandler('suscripciones', handlers.subscriptions))
         # dispatcher.add_handler(CommandHandler('subscripciones', handlers.subscriptions))
-        # dispatcher.add_handler(CallbackQueryHandler(handlers.callback_subscriptions))
+        dispatcher.add_handler(CallbackQueryHandler(handlers.callback_query))
 
         # dispatcher.add_handler(MessageHandler(Filters.text, handlers.other_text))
 

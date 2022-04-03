@@ -1,0 +1,76 @@
+{
+    "meta": {
+        "limit": 250,
+        "next": null,
+        "offset": 0,
+        "previous": null,
+        "total_count": 13
+    },
+    "tag": [
+        {
+            "color": "#3ec1ad",
+            "id": "11",
+            "name": "Acústico"
+        },
+        {
+            "color": "#6859b5",
+            "id": "10",
+            "name": "Black / Soul / Funk"
+        },
+        {
+            "color": "#ba9b3d",
+            "id": "3",
+            "name": "Clásica / Lírica"
+        },
+        {
+            "color": "#3dba9b",
+            "id": "8",
+            "name": "Electrónica"
+        },
+        {
+            "color": "#7fc64b",
+            "id": "7",
+            "name": "Familiar"
+        },
+        {
+            "color": "#FFFFFFFF",
+            "id": "13",
+            "name": "Folk"
+        },
+        {
+            "color": "#4ba2c6",
+            "id": "6",
+            "name": "Fusión / worldmusic"
+        },
+        {
+            "color": "#c7588f",
+            "id": "5",
+            "name": "Indie"
+        },
+        {
+            "color": "#666d9e",
+            "id": "12",
+            "name": "Jazz / Swing"
+        },
+        {
+            "color": "#d89240",
+            "id": "1",
+            "name": "Pop"
+        },
+        {
+            "color": "#d7524b",
+            "id": "2",
+            "name": "Rock"
+        },
+        {
+            "color": "#5c7879",
+            "id": "9",
+            "name": "Tributo"
+        },
+        {
+            "color": "#77af46",
+            "id": "4",
+            "name": "Urbana"
+        }
+    ]
+}

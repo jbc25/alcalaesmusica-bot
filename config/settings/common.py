@@ -13,6 +13,7 @@ import environ
 
 ROOT_DIR = environ.Path(__file__) - 3  # (base_dir/config/settings/common.py - 3 = base_dir/)
 PROJ_DIR = ROOT_DIR.path('dproject')
+DATA_DIR = ROOT_DIR.path('data')
 
 env = environ.Env()
 env.read_env()
@@ -110,7 +111,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Madrid'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = 'en'
