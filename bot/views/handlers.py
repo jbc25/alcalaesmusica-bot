@@ -67,7 +67,10 @@ def callback_query(update, context):
         tag_id = query_data['data']
         tag = Tag.objects.get(id=tag_id)
         answer_text = tag.name if tag else 'No se encuentra el Tag'
-        context.bot.answer_callback_query(callback_query_id=query.id, text=answer_text)
+        context.bot.answer_callback_query(callback_query_id=query.id)  # , text=answer_text (for banner message)
+        filter_text = f'Filtrando por {answer_text.upper()}\nPulsa /eventos para mostrar todos'
+        context.bot.edit_message_text(chat_id=update.effective_chat.id, message_id=query.message.message_id,
+                                      text=filter_text, reply_markup=tags_keyboard())
 
 
 def send_dev_chat_message(context, message):
