@@ -9,7 +9,13 @@ from bot.utils.keyboards_markup import *
 
 
 def start(update, context):
-    text = "<b>¡Hola!</b> que tal"
+    text = "<b>¡Bienvenid@!</b>\nA partir de ahora será muy fácil enterarte de los eventos musicales de la ciudad. " \
+           "Es muy fácil comunicarte conmigo, escríbeme /eventos y te prepararé en un instante la lista de todos " \
+           "los eventos musicales programados en adelante, podrás filtrar por estilos de música.\n\nSi solo " \
+           "te interesan los del siguiente fin de semana mándame un /finde.\n\nY si quieres que te avise automáticamente" \
+           "cuando haya nuevos conciertos que te interesen, mandame /avisos y elige los estilos que te gusten. " \
+           "Yo estaré siempre atento para avisarte y que no se te pase ninguno!"
+
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML", reply_markup=telegram.ReplyKeyboardRemove())
 
 
@@ -71,6 +77,12 @@ def callback_query(update, context):
         filter_text = f'Filtrando por {answer_text.upper()}\nPulsa /eventos para mostrar todos'
         context.bot.edit_message_text(chat_id=update.effective_chat.id, message_id=query.message.message_id,
                                       text=filter_text, reply_markup=tags_keyboard())
+
+
+def notices(update, context):
+    text = "🚧 ¡Ei! Esto todavía está en construcción. 🚧"
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
+                             reply_markup=telegram.ReplyKeyboardRemove())
 
 
 def send_dev_chat_message(context, message):
