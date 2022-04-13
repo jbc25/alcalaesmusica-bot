@@ -27,7 +27,7 @@ def events(update, context):
 
     try:
         events = get_events()
-        prepare_text_and_send(events, '', context.bot, update.effective_chat.id, tags_access_keyboard())
+        prepare_text_and_send(events, '', context.bot, update.effective_chat.id, reply_markup=tags_access_keyboard())
     except Exception as e:
         send_dev_chat_message(context, str(e))
 
