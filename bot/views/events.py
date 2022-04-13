@@ -82,9 +82,10 @@ def prepare_text(events, initial_text, no_events_text='No hay eventos próximame
     return text_slices
 
 
-def prepare_text_and_send(events, initial_text, bot, chat_id, reply_markup=telegram.ReplyKeyboardRemove()):
+def prepare_text_and_send(events, initial_text, bot, chat_id,
+                          no_events_text='No hay eventos próximamente', reply_markup=telegram.ReplyKeyboardRemove()):
 
-    text_slices = prepare_text(events, initial_text)
+    text_slices = prepare_text(events, initial_text, no_events_text)
     for i, text in enumerate(text_slices):
         bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML",
                          disable_web_page_preview=True,

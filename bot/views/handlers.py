@@ -54,7 +54,8 @@ def finde(update, context):
         if event.date_between(friday_this_week, sunday_this_week):
             events_finde.append(event)
 
-    prepare_text_and_send(events_finde, 'Eventos del próximo fin de semana', context.bot, update.effective_chat.id)
+    prepare_text_and_send(events_finde, 'Eventos del próximo fin de semana', context.bot, update.effective_chat.id,
+                          no_events_text='No hay eventos para el fin de semana')
 
 
 def callback_query(update, context):
