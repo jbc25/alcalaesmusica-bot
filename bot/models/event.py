@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db import models
 
 # https://www.programiz.com/python-programming/datetime/strftime
@@ -10,6 +10,14 @@ DATE_FORMAT_API = '%Y-%m-%d'
 TIME_FORMAT_API = '%H:%M:%S'
 DATE_FORMAT_HUMAN = '%-d %B %Y'
 TIME_FORMAT_HUMAN = '%H:%M'
+
+
+class Band:
+    def __init__(self, id, name, tag_id=-1, tag_name=None):
+        self.id = id
+        self.name = name
+        self.tag_id = tag_id
+        self.tag_name = tag_name
 
 
 class Event(models.Model):
@@ -25,8 +33,13 @@ class Event(models.Model):
     price = models.FloatField(null=True, blank=True)
     price_preorder = models.FloatField(null=True, blank=True)
     ticket_link = models.CharField(max_length=200)
-    venue_name = models.CharField(max_length=200)
-    venue_address = models.CharField(max_length=200)
+    venue_id = models.BigIntegerField(null=True, blank=True)
+    venue_name = models.CharField(max_length=200, null=True, blank=True)
+    venue_address = models.CharField(max_length=200, null=True, blank=True)
+    venue_name_ext = models.CharField(max_length=200,null=True, blank=True)
+    venue_address_ext = models.CharField(max_length=200, null=True, blank=True)
+
+    bands = []
 
 
     @staticmethod
@@ -49,11 +62,26 @@ class Event(models.Model):
                 event.price = event_api['price']
                 event.price_preorder = event_api['price_preorder']
                 event.ticket_link = event_api['ticket_link']
-                event.venue_name = event_api['venue_name']
-                event.venue_address = event_api['venue_address']
 
-                if is_old(event):
+                if is_old(event) or is_too_future(event):
                     continue
+
+                if event_api['venues']:
+                    event.venue_id = event_api['venues']['id']
+                    event.venue_name = event_api['venues']['name']
+                    event.venue_address = event_api['venues']['address']
+
+                event.venue_name_ext = event_api['venue_name']
+                event.venue_address_ext = event_api['venue_address']
+
+                event.bands = []
+                if event_api['bands']:
+                    for item in event_api['bands']:
+                        band = Band(item['id'], item['name'])
+                        if item['tag']:
+                            band.tag_id = item['tag']['id']
+                            band.tag_name = item['tag']['name']
+                        event.bands.append(band)
 
                 events.append(event)
             except Exception as e:
@@ -61,17 +89,15 @@ class Event(models.Model):
                 print(error)
                 raise Exception(error)
 
-
         events_sorted = sorted(
             events,
             key=lambda x: datetime.strptime(x.datetime, DATETIME_FORMAT_API), reverse=False
         )
 
-        # for event in events_sorted:
-        #     if len(event.event_types_ids) > len(set(event.event_types_ids)) > 1:
-        #         raise Exception('hay duplicados!: ' + event.title)
-
         return events_sorted
+
+    def get_place(self):
+        return f'{self.venue_name}' if self.venue_name else f'{self.venue_name_ext} ({self.venue_address_ext})'
 
     def get_type_names(self):
         return ', '.join([event_type.name for event_type in self.event_types.all()])
@@ -129,6 +155,16 @@ def is_old(event):
         day = datetime.strptime(event.datetime, DATETIME_FORMAT_API)
         now = datetime.now()
         return day <= now
+    except:
+        print("(caught) error date: " + event.date_to)
+        return False
+
+
+def is_too_future(event):
+    try:
+        day = datetime.strptime(event.datetime, DATETIME_FORMAT_API)
+        future = datetime.now() + timedelta(days=30)
+        return day > future
     except:
         print("(caught) error date: " + event.date_to)
         return False

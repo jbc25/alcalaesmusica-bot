@@ -76,9 +76,11 @@ def callback_query(update, context):
         tag = Tag.objects.get(id=tag_id)
         answer_text = tag.name if tag else 'No se encuentra el Tag'
         context.bot.answer_callback_query(callback_query_id=query.id)  # , text=answer_text (for banner message)
+        events_filtered = filter_events(tag_id)
         filter_text = f'Filtrando por {answer_text.upper()}\nPulsa /eventos para mostrar todos'
+        text = prepare_text(events_filtered, filter_text, no_events_text=f'No hay eventos para la categoría: {answer_text.upper()}')
         context.bot.edit_message_text(chat_id=update.effective_chat.id, message_id=query.message.message_id,
-                                      text=filter_text, reply_markup=tags_keyboard())
+                                      text=text, parse_mode="HTML", disable_web_page_preview=True, reply_markup=tags_keyboard())
 
 
 def notices(update, context):

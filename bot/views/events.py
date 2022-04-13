@@ -42,22 +42,48 @@ def get_events_api():
         raise Exception(f'API error: {response.status_code}\n{response.text}')
 
 
-def prepare_text_and_send(events, initial_text, bot, chat_id, reply_markup=telegram.ReplyKeyboardRemove()):
+def filter_events(tag_id):
+    events = get_events()
+    filtered = []
+    for event in events:
+        for band in event.bands:
+            print(type(band.tag_id))
+            print(type(tag_id))
+            if int(band.tag_id) == tag_id:
+                filtered.append(event)
+    return filtered
+
+
+def prepare_text(events, initial_text, no_events_text='No hay eventos próximamente'):
     if not events:
-        bot.send_message(chat_id=chat_id, text='No hay eventos próximamente', parse_mode="HTML",
-                         disable_web_page_preview=True,
-                         reply_markup=reply_markup)
-        return
+        return no_events_text
 
     text = initial_text + "\n\n"
 
+    index = 0
+
     for event in events:
-        text += '<b><a href="%s">%s</a></b>' % (event.link, event.title)
+        text += f'<b><a href="%s">%s</a></b>' % (event.link, event.title)
         # text += '\n<i>➪ %s</i>' % event.get_type_names() if len(event.event_types.all()) > 0 else ''
         text += '\n📅 %s: ' % event.get_date_human_format()
         text += '\n🕑 %s' % event.get_time_human_format()
+        for band in event.bands:
+            text += '\n🎸 %s' % f'{band.name} ({band.tag_name})'
+        text += '\n📍 %s' % event.get_place()
+
         text += '\n\n'
 
+        index += 1
+        if index > 32:
+            break
+
+    return text
+
+
+def prepare_text_and_send(events, initial_text, bot, chat_id, reply_markup=telegram.ReplyKeyboardRemove()):
+
+    text = prepare_text(events, initial_text)
+    print(f'Longitud mensaje: {len(text)}')
     bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML",
                      disable_web_page_preview=True,
                      reply_markup=reply_markup)
