@@ -63,7 +63,7 @@ class Event(models.Model):
                 event.price_preorder = event_api['price_preorder']
                 event.ticket_link = event_api['ticket_link']
 
-                if is_old(event) or is_too_future(event):
+                if is_old(event):   # or is_too_future(event):
                     continue
 
                 if event_api['venues']:

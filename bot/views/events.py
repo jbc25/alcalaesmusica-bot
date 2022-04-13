@@ -56,13 +56,14 @@ def filter_events(tag_id):
 
 def prepare_text(events, initial_text, no_events_text='No hay eventos próximamente'):
     if not events:
-        return no_events_text
+        return [no_events_text]
+
+    events_limit = 30   # more than this number could result in a "Message too long" error
+    text_slices = []
 
     text = initial_text + "\n\n"
 
-    index = 0
-
-    for event in events:
+    for i, event in enumerate(events):
         text += f'<b><a href="%s">%s</a></b>' % (event.link, event.title)
         # text += '\n<i>➪ %s</i>' % event.get_type_names() if len(event.event_types.all()) > 0 else ''
         text += '\n📅 %s: ' % event.get_date_human_format()
@@ -73,17 +74,18 @@ def prepare_text(events, initial_text, no_events_text='No hay eventos próximame
 
         text += '\n\n'
 
-        index += 1
-        if index > 32:
-            break
+        if i > 0 and i % events_limit == 0:
+            text_slices.append(text)
+            text = ""
 
-    return text
+    text_slices.append(text)
+    return text_slices
 
 
 def prepare_text_and_send(events, initial_text, bot, chat_id, reply_markup=telegram.ReplyKeyboardRemove()):
 
-    text = prepare_text(events, initial_text)
-    print(f'Longitud mensaje: {len(text)}')
-    bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML",
-                     disable_web_page_preview=True,
-                     reply_markup=reply_markup)
+    text_slices = prepare_text(events, initial_text)
+    for i, text in enumerate(text_slices):
+        bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML",
+                         disable_web_page_preview=True,
+                         reply_markup=reply_markup if i == len(text_slices)-1 else telegram.ReplyKeyboardRemove())
