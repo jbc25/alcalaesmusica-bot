@@ -6,6 +6,8 @@ from bot.models.tag import Tag
 from .events import *
 from datetime import datetime, timedelta
 from bot.utils.keyboards_markup import *
+from bot.models.preference import Preference
+from bot.utils.preference_keys import *
 
 
 def start(update, context):
@@ -82,6 +84,13 @@ def callback_query(update, context):
 def notices(update, context):
     text = "🚧 ¡Ei! Esto todavía está en construcción. 🚧"
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
+                             reply_markup=telegram.ReplyKeyboardRemove())
+
+
+def remove_cache(update, context):
+    Preference.remove(PREF_EVENTS_CACHE)
+    Preference.remove(PREF_CACHE_TIMESTAMP)
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Caché borrada', parse_mode="HTML",
                              reply_markup=telegram.ReplyKeyboardRemove())
 
 

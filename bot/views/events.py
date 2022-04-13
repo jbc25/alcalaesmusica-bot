@@ -1,24 +1,45 @@
 import requests
 import telegram
 from bot.models.event import Event
+from bot.models.preference import Preference
+from datetime import datetime, timedelta
+from bot.utils.preference_keys import *
+
+DATETIME_FORMAT_API = '%Y-%m-%d %H:%M:%S'
 
 
 def get_events():
-    response = requests.get(f'https://alcalaesmusica.org/api/v1/events/?limit=250&offset=250')
+
+    cache_timestamp = Preference.get(PREF_CACHE_TIMESTAMP, '2022-04-13 06:00:00')
+    cache_datetime = datetime.strptime(cache_timestamp, DATETIME_FORMAT_API)
+    now_minus_5_mins = datetime.now() - timedelta(minutes=5)
+    if cache_datetime > now_minus_5_mins:
+        # save 5 mins of cache
+        return get_events_cache()
+    else:
+        return get_events_api()
+
+
+def get_events_cache():
+    cache_json = Preference.get(PREF_EVENTS_CACHE)
+    if not cache_json:
+        return get_events_api()
+
+    events = Event.parse_events(cache_json)
+    print(f'getting events from cache. len: {len(events)}')
+    return events
+
+
+def get_events_api():
+    response = requests.get(f'https://alcalaesmusica.org/api/v1/upcoming_events/')
     if response.status_code == 200:
-        return Event.parse_events(response.text)
+        events = Event.parse_events(response.text)
+        Preference.set(PREF_EVENTS_CACHE, response.text)
+        Preference.set(PREF_CACHE_TIMESTAMP, datetime.now().strftime(DATETIME_FORMAT_API))
+        print(f'getting events from api. len: {len(events)}')
+        return events
     else:
         raise Exception(f'API error: {response.status_code}\n{response.text}')
-
-
-def get_reply_keyboard_markup():
-    return telegram.ReplyKeyboardRemove()
-    # custom_keyboard = [[
-    #         telegram.KeyboardButton(text='/eventos'),
-    #         telegram.KeyboardButton(text='/finde'),
-    # ]]
-    # reply_keyboard_markup = telegram.ReplyKeyboardMarkup(custom_keyboard, one_time_keyboard=False, resize_keyboard=True)
-    # return reply_keyboard_markup
 
 
 def prepare_text_and_send(events, initial_text, bot, chat_id, reply_markup=telegram.ReplyKeyboardRemove()):
