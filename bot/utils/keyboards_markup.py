@@ -1,6 +1,6 @@
 import telegram
 from bot.models.tag import Tag
-from bot.models.event_subscription import *
+from bot.models.event_notices import *
 import json
 
 
