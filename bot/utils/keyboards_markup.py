@@ -1,5 +1,6 @@
 import telegram
 from bot.models.tag import Tag
+from bot.models.event_subscription import *
 import json
 
 
@@ -11,6 +12,7 @@ class InlineButton:
 
     ACCESS_FILTER_TAGS = "access_filter_tags"
     FILTER_TAG = "filter_tag"
+    NOTICES_TAG = "notices_tag"
 
 
 def create_inline_keyboard(items, buttons_per_row):
@@ -38,3 +40,17 @@ def tags_keyboard():
     tags = Tag.objects.all()
     items = list(map(lambda tag: InlineButton(tag.name, InlineButton.FILTER_TAG, data=tag.id), tags))
     return create_inline_keyboard(items, 3)
+
+
+def tags_notices_keyboard(chat_id):
+    tags = Tag.objects.all()
+
+    for tag in tags:
+        tag_notices_active = TagNotice.objects.filter(id_chat=chat_id, tag__id=tag.id).first()
+        if tag_notices_active is not None:
+            print(tag_notices_active)
+            tag.name = ("✅ " if tag_notices_active.subscribed else "") + tag.name
+
+    items = list(map(lambda tag: InlineButton(tag.name, InlineButton.NOTICES_TAG, data=tag.id), tags))
+    return create_inline_keyboard(items, 3)
+

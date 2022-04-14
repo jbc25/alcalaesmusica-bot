@@ -65,11 +65,13 @@ def callback_query(update, context):
     query_data = json.loads(query.data)
     type = query_data['type']
 
+    chat_id = update.effective_chat.id
+
     print(f'INLINE MESSAGE ID: {query.inline_message_id}')
 
     if type == InlineButton.ACCESS_FILTER_TAGS:
         context.bot.answer_callback_query(callback_query_id=query.id)
-        context.bot.edit_message_reply_markup(chat_id=update.effective_chat.id, message_id=query.message.message_id,
+        context.bot.edit_message_reply_markup(chat_id=chat_id, message_id=query.message.message_id,
                                               reply_markup=tags_keyboard())
 
     elif type == InlineButton.FILTER_TAG:
@@ -80,14 +82,36 @@ def callback_query(update, context):
         events_filtered = filter_events(tag_id)
         filter_text = f'Filtrando por {answer_text.upper()}\nPulsa /eventos para mostrar todos'
         text = prepare_text(events_filtered, filter_text, no_events_text=f'No hay eventos para la categoría: {answer_text.upper()}')
-        context.bot.edit_message_text(chat_id=update.effective_chat.id, message_id=query.message.message_id,
+        context.bot.edit_message_text(chat_id=chat_id, message_id=query.message.message_id,
                                       text=text[0], parse_mode="HTML", disable_web_page_preview=True, reply_markup=tags_keyboard())
+
+    elif type == InlineButton.NOTICES_TAG:
+        tag_id = query_data['data']
+        tag = Tag.objects.get(id=tag_id)
+        context.bot.answer_callback_query(callback_query_id=query.id)
+        tag_notice = TagNotice.objects.filter(id_chat=chat_id, tag__id=tag.id).first()
+
+        if tag_notice:
+            tag_notice.subscribed = not tag_notice.subscribed
+            tag_notice.save()
+        else:
+            tag_notice = TagNotice(id_chat=chat_id, tag=tag, subscribed=True)
+            tag_notice.save()
+
+        text = "Marca los tipos de música que te interesen y te avisaré cuando se publique alguno nuevo:"
+        context.bot.edit_message_text(chat_id=chat_id, message_id=query.message.message_id,
+                                      text=text, parse_mode="HTML", reply_markup=tags_notices_keyboard(chat_id))
 
 
 def notices(update, context):
-    text = "🚧 ¡Ei! Esto todavía está en construcción. 🚧"
-    context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
-                             reply_markup=telegram.ReplyKeyboardRemove())
+    if update.effective_chat.type != 'private':
+        update.message.reply_text(text='Los avisos funcionan solo en chats privados. Hazlo directamente a través del bot: t.me/alcalaesmusicabot')
+        return
+
+    text = "Marca los tipos de música que te interesen y te avisaré cuando se publique alguno nuevo:"
+
+    chat_id = update.effective_chat.id
+    context.bot.send_message(chat_id=chat_id, text=text, reply_markup=tags_notices_keyboard(chat_id))
 
 
 def remove_cache(update, context):
