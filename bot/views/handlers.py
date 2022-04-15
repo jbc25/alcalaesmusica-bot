@@ -25,7 +25,6 @@ def start(update, context):
         events_notified = EventNotified(id_chat=chat_id)
         events_notified.save()
 
-
     text = "<b>¡Bienvenid@!</b>\nA partir de ahora será muy fácil enterarte de los eventos musicales de la ciudad. " \
            "Es muy fácil comunicarte conmigo, escríbeme /eventos y te prepararé en un instante la lista de todos " \
            "los eventos musicales programados en adelante, podrás filtrar por estilos de música.\n\nSi solo " \

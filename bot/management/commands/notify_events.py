@@ -6,7 +6,6 @@ from bot.models.tag import Tag
 from bot.models.user_chat import UserChat
 from bot.models.event_notices import *
 from bot.views.events import *
-import json
 
 
 class Command(BaseCommand):
