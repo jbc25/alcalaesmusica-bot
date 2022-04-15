@@ -8,9 +8,24 @@ from datetime import datetime, timedelta
 from bot.utils.keyboards_markup import *
 from bot.models.preference import Preference
 from bot.utils.preference_keys import *
+from bot.models.user_chat import UserChat
 
 
 def start(update, context):
+
+    chat_id = update.effective_chat.id
+
+    user_chat = UserChat.objects.filter(id_chat=chat_id)
+    if not user_chat:
+        user_chat = UserChat(id_chat=chat_id)
+        user_chat.save()
+
+    events_notified = EventNotified.objects.filter(id_chat=chat_id)
+    if not events_notified:
+        events_notified = EventNotified(id_chat=chat_id)
+        events_notified.save()
+
+
     text = "<b>¡Bienvenid@!</b>\nA partir de ahora será muy fácil enterarte de los eventos musicales de la ciudad. " \
            "Es muy fácil comunicarte conmigo, escríbeme /eventos y te prepararé en un instante la lista de todos " \
            "los eventos musicales programados en adelante, podrás filtrar por estilos de música.\n\nSi solo " \
@@ -18,7 +33,7 @@ def start(update, context):
            "cuando haya nuevos conciertos que te interesen, mandame /avisos y elige los estilos que te gusten. " \
            "Yo estaré siempre atento para avisarte y que no se te pase ninguno!"
 
-    context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML", reply_markup=telegram.ReplyKeyboardRemove())
+    context.bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML", reply_markup=telegram.ReplyKeyboardRemove())
 
 
 def events(update, context):

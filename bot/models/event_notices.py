@@ -15,7 +15,7 @@ class TagNotice(models.Model):
 
 class EventNotified(models.Model):
     id_chat = models.BigIntegerField(primary_key=True)
-    ids_events = models.TextField(blank=True)
+    ids_events = models.TextField(blank=False, default='[]')
 
     def add_id_event(self, id):
         list_ids_events = json.loads(self.ids_events)

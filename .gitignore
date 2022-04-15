@@ -79,3 +79,4 @@ core
 /config/settings/db.py
 /db.sqlite3
 /bot/token.py
+/bot/migrations/
