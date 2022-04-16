@@ -4,6 +4,7 @@ from bot.models.event import Event
 from bot.models.preference import Preference
 from datetime import datetime, timedelta
 from bot.utils.preference_keys import *
+from bot.utils.keyboards_markup import *
 
 DATETIME_FORMAT_API = '%Y-%m-%d %H:%M:%S'
 
@@ -71,7 +72,7 @@ def prepare_text(events, initial_text, no_events_text='No hay eventos próximame
         for band in event.bands:
             text += '\n🎸 %s' % f'{band.name} ({band.tag_name})'
         text += '\n📍 %s' % event.get_place()
-        text += '\nMás info: #' + str(event.id)
+        text += '\nMás info: /e' + str(event.id)
 
         text += '\n\n'
 
@@ -79,7 +80,8 @@ def prepare_text(events, initial_text, no_events_text='No hay eventos próximame
             text_slices.append(text)
             text = ""
 
-    text_slices.append(text)
+    if text:
+        text_slices.append(text)
     return text_slices
 
 
@@ -88,7 +90,38 @@ def prepare_text_and_send(events, initial_text, bot, chat_id,
 
     text_slices = prepare_text(events, initial_text, no_events_text)
     for i, text in enumerate(text_slices):
-        if text:
-            bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML",
+
+        bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML",
                             disable_web_page_preview=True,
                             reply_markup=reply_markup if i == len(text_slices)-1 else telegram.ReplyKeyboardRemove())
+
+
+def get_event_by_id(id_event):
+    events = get_events()
+    event = next(filter(lambda ev: ev.id == id_event, events))
+    return event
+
+
+def send_event_info(event, bot, chat_id,):
+    if not event:
+        bot.send_message(chat_id=chat_id, text='No se ha encontrado información del evento', parse_mode="HTML",
+                         reply_markup=telegram.ReplyKeyboardRemove())
+    else:
+        text = f'<b><a href="%s">%s</a></b>' % (event.link, event.title)
+        text += '\n📅 %s: ' % event.get_date_human_format()
+        text += '\n🕑 %s' % event.get_time_human_format()
+        for band in event.bands:
+            text += '\n🎸 %s' % f'{band.name} ({band.tag_name})'
+        text += '\n📍 %s' % event.get_place()
+        if not event.price:
+            text += '\n💰 Gratuito'
+        else:
+            text += '\n💰 %.2f€' % event.price
+            if event.price_preorder:
+                text += '\n🤑 %.2f€' % event.price_preorder
+
+
+
+        bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML",
+                         disable_web_page_preview=True,
+                         reply_markup=event_info_keyboard(event))

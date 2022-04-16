@@ -13,9 +13,10 @@ TIME_FORMAT_HUMAN = '%H:%M'
 
 
 class Band:
-    def __init__(self, id, name, tag_id=-1, tag_name=None):
+    def __init__(self, id, name, genre, tag_id=-1, tag_name=None):
         self.id = id
         self.name = name
+        self.genre = genre
         self.tag_id = tag_id
         self.tag_name = tag_name
 
@@ -77,7 +78,7 @@ class Event(models.Model):
                 event.bands = []
                 if event_api['bands']:
                     for item in event_api['bands']:
-                        band = Band(item['id'], item['name'])
+                        band = Band(item['id'], item['name'], item['genre'])
                         if item['tag']:
                             band.tag_id = item['tag']['id']
                             band.tag_name = item['tag']['name']

@@ -117,6 +117,21 @@ def callback_query(update, context):
         context.bot.edit_message_text(chat_id=chat_id, message_id=query.message.message_id,
                                       text=text, parse_mode="HTML", reply_markup=tags_notices_keyboard(chat_id))
 
+    elif type == InlineButton.BAND_INFO:
+        id_event_and_band = query_data['data']
+        id_event = int(id_event_and_band.split('-')[0])
+        id_band = int(id_event_and_band.split('-')[1])
+        event = get_event_by_id(id_event)
+        band = next(filter(lambda b: b.id == id_band, event.bands))
+        context.bot.answer_callback_query(callback_query_id=query.id)
+        context.bot.send_message(chat_id=chat_id, text=f'Evento: {event.title}, Banda: {band.name}', reply_markup=event_info_keyboard(event))
+
+    elif type == InlineButton.VENUE_INFO:
+        id_event = query_data['data']
+        event = get_event_by_id(id_event)
+        context.bot.answer_callback_query(callback_query_id=query.id)
+        context.bot.send_message(chat_id=chat_id, text=f'Lugar: {event.venue_name}', reply_markup=event_info_keyboard(event))
+
 
 def notices(update, context):
     if update.effective_chat.type != 'private':
@@ -136,5 +151,11 @@ def remove_cache(update, context):
                              reply_markup=telegram.ReplyKeyboardRemove())
 
 
+def event_info_command(update, context):
+    id_event = int(update.message.text.replace('/e', ''))
+    event = get_event_by_id(id_event)
+    send_event_info(event, context.bot, update.effective_chat.id)
+
+
 def send_dev_chat_message(context, message):
-    context.bot.send_message(chat_id=15480516, text=message)
+    context.bot.send_message(chat_id=15480516, text='AemBot dev message:\n' + message)
