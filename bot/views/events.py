@@ -58,7 +58,7 @@ def prepare_text(events, initial_text, no_events_text='No hay eventos próximame
     if not events:
         return [no_events_text]
 
-    events_limit = 30   # more than this number could result in a "Message too long" error
+    events_limit = 25   # more than this number could result in a "Message too long" error
     text_slices = []
 
     text = initial_text + "\n\n"
@@ -71,6 +71,7 @@ def prepare_text(events, initial_text, no_events_text='No hay eventos próximame
         for band in event.bands:
             text += '\n🎸 %s' % f'{band.name} ({band.tag_name})'
         text += '\n📍 %s' % event.get_place()
+        text += '\nMás info: #' + str(event.id)
 
         text += '\n\n'
 
@@ -87,6 +88,7 @@ def prepare_text_and_send(events, initial_text, bot, chat_id,
 
     text_slices = prepare_text(events, initial_text, no_events_text)
     for i, text in enumerate(text_slices):
-        bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML",
-                         disable_web_page_preview=True,
-                         reply_markup=reply_markup if i == len(text_slices)-1 else telegram.ReplyKeyboardRemove())
+        if text:
+            bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML",
+                            disable_web_page_preview=True,
+                            reply_markup=reply_markup if i == len(text_slices)-1 else telegram.ReplyKeyboardRemove())

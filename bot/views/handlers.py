@@ -25,10 +25,10 @@ def start(update, context):
         events_notified = EventNotified(id_chat=chat_id)
         events_notified.save()
 
-    text = "<b>¡Bienvenid@!</b>\nA partir de ahora será muy fácil enterarte de los eventos musicales de la ciudad. " \
-           "Es muy fácil comunicarte conmigo, escríbeme /eventos y te prepararé en un instante la lista de todos " \
-           "los eventos musicales programados en adelante, podrás filtrar por estilos de música.\n\nSi solo " \
-           "te interesan los del siguiente fin de semana mándame un /finde.\n\nY si quieres que te avise automáticamente" \
+    text = "<b>¡Bienvenid@!</b>\n\nA partir de ahora será muy fácil enterarte de los eventos musicales de la ciudad. " \
+           "Es muy fácil comunicarte conmigo, escríbeme /eventos y te prepararé en un instante la lista de los " \
+           "los próximos conciertos, podrás filtrar por estilos de música.\n\nSi solo " \
+           "te interesan los del siguiente fin de semana mándame un /finde.\n\nY si quieres que te avise automáticamente " \
            "cuando haya nuevos conciertos que te interesen, mandame /avisos y elige los estilos que te gusten. " \
            "Yo estaré siempre atento para avisarte y que no se te pase ninguno!"
 
@@ -102,7 +102,6 @@ def callback_query(update, context):
     elif type == InlineButton.NOTICES_TAG:
         tag_id = query_data['data']
         tag = Tag.objects.get(id=tag_id)
-        context.bot.answer_callback_query(callback_query_id=query.id)
         tag_notice = TagNotice.objects.filter(id_chat=chat_id, tag__id=tag.id).first()
 
         if tag_notice:
@@ -111,6 +110,8 @@ def callback_query(update, context):
         else:
             tag_notice = TagNotice(id_chat=chat_id, tag=tag, subscribed=True)
             tag_notice.save()
+
+        context.bot.answer_callback_query(callback_query_id=query.id)
 
         text = "Marca los tipos de música que te interesen y te avisaré cuando se publique alguno nuevo:"
         context.bot.edit_message_text(chat_id=chat_id, message_id=query.message.message_id,

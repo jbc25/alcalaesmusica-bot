@@ -6,7 +6,7 @@ import json
 
 class TagNotice(models.Model):
     id_chat = models.BigIntegerField(blank=True) # In private chats user_id is the same as chat_id: https://stackoverflow.com/a/59750179/1365440
-    tag = models.OneToOneField(Tag, on_delete=models.CASCADE, null=True)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=True)
     subscribed = models.BooleanField()
 
     def __str__(self):
