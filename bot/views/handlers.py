@@ -136,6 +136,10 @@ def callback_query(update, context):
         id_event = query_data['data']
         event = get_event_by_id(id_event)
         context.bot.answer_callback_query(callback_query_id=query.id)
+
+        if event.venue.image:
+            context.bot.send_photo(chat_id=chat_id, photo=f'{URL_BASE}{event.venue.image}')
+
         context.bot.send_message(chat_id=chat_id, text=venue_info(event.venue), parse_mode="HTML",
                                  reply_markup=venue_info_keyboard(event))
 
@@ -168,6 +172,12 @@ def event_info_command(update, context):
     id_event = int(update.message.text.replace('/e', ''))
     event = get_event_by_id(id_event)
     send_event_info(event, context.bot, update.effective_chat.id)
+
+
+def any_text(update, context):
+    text = f'No sé lo que me quieres decir pero por si acaso: ¡<b>{update.message.text}</b> lo serás tu! 😝'
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
+                             reply_markup=telegram.ReplyKeyboardRemove())
 
 
 def send_dev_chat_message(context, message):

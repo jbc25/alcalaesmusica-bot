@@ -70,10 +70,10 @@ def event_info_keyboard(event):
         items.append(InlineButton('Comprar entradas', InlineButton.URL_BUTTON, url=event.ticket_link))
 
     for band in event.bands:
-        items.append(InlineButton(f'Info de la banda: {band.name}', InlineButton.BAND_INFO,
+        items.append(InlineButton(f'Información de la banda: {band.name}', InlineButton.BAND_INFO,
                                   data=str(event.id) + '-' + str(band.id)))
 
-    items.append(InlineButton(f'Info del lugar', InlineButton.VENUE_INFO, data=event.id))
+    items.append(InlineButton(f'Información del espacio', InlineButton.VENUE_INFO, data=event.id))
 
     return create_inline_keyboard(items, 1)
 
@@ -82,7 +82,7 @@ def band_info_keyboard(event, band):
     items = []
 
     url_band = f'{URL_BASE}/bands/{band.id}'
-    items.append(InlineButton('Más información en la web', InlineButton.URL_BUTTON, url=url_band))
+    items.append(InlineButton('Más información de la banda', InlineButton.URL_BUTTON, url=url_band))
 
     items.append(InlineButton(f'Información del evento', InlineButton.EVENT_INFO, data=event.id))
 
@@ -94,7 +94,7 @@ def venue_info_keyboard(event):
 
     if event.venue.id:
         url_venue = f'{URL_BASE}/venues/{event.venue.id}'
-        items.append(InlineButton('Más información en la web', InlineButton.URL_BUTTON, url=url_venue))
+        items.append(InlineButton('Más información del espacio', InlineButton.URL_BUTTON, url=url_venue))
 
     if event.venue.lat and event.venue.lng:
         url_venue_map = f'https://maps.google.com/?q={event.venue.lat},{event.venue.lng}'

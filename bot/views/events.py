@@ -103,11 +103,15 @@ def get_event_by_id(id_event):
     return event
 
 
-def send_event_info(event, bot, chat_id,):
+def send_event_info(event, bot, chat_id):
     if not event:
         bot.send_message(chat_id=chat_id, text='No se ha encontrado información del evento', parse_mode="HTML",
                          reply_markup=telegram.ReplyKeyboardRemove())
     else:
+
+        if event.poster:
+            bot.send_photo(chat_id=chat_id, photo=f'{URL_BASE}{event.poster}')
+
         bot.send_message(chat_id=chat_id, text=event_info(event), parse_mode="HTML",
                          disable_web_page_preview=True,
                          reply_markup=event_info_keyboard(event))

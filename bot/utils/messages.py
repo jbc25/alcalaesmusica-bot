@@ -3,7 +3,10 @@
 def band_info(band):
     text = f'<b>{band.name.upper()}</b>'
     text += f'\n\n{band.tag_name}'
-    text += f'\n{band.genre}'
+
+    if band.genre and band.genre != band.tag_name:
+        text += f'\n{band.genre}'
+
     text += f'\n\n{band.description}'
     return text
 
@@ -12,7 +15,7 @@ def venue_info(venue):
     text = f'<b>{venue.name.upper()}</b>'
     text += f'\n\n{venue.address}'
 
-    if venue.description
+    if venue.description:
         text += f'\n\n{venue.description}'
 
     return text

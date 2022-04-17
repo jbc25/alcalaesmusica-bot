@@ -25,13 +25,14 @@ class Band:
 
 
 class Venue:
-    def __init__(self, id=None, name=None, address=None, description=None, lat=None, lng=None):
+    def __init__(self, id=None, name=None, address=None, description=None, lat=None, lng=None, image=None):
         self.id = id
         self.name = name
         self.address = address
         self.description = description
         self.lat = lat
         self.lng = lng
+        self.image = image
 
 
 class Event(models.Model):
@@ -79,7 +80,8 @@ class Event(models.Model):
                 if event_api['venues']:
                     venue_api = event_api['venues']
                     event.venue = Venue(venue_api['id'], venue_api['name'], venue_api['address'],
-                                        venue_api['description'], venue_api['latitude'], venue_api['longitude'])
+                                        venue_api['description'], venue_api['latitude'], venue_api['longitude'],
+                                        venue_api['image'])
                 else:
                     event.venue = Venue(name=event_api['venue_name'], address=event_api['venue_address'])
 
