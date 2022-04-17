@@ -11,7 +11,10 @@ def band_info(band):
 def venue_info(venue):
     text = f'<b>{venue.name.upper()}</b>'
     text += f'\n\n{venue.address}'
-    text += f'\n\n{venue.description}'
+
+    if venue.description
+        text += f'\n\n{venue.description}'
+
     return text
 
 
