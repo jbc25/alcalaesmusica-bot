@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timedelta
 from django.db import models
+from bot.utils.constants import URL_BASE
 
 # https://www.programiz.com/python-programming/datetime/strftime
 
@@ -13,12 +14,24 @@ TIME_FORMAT_HUMAN = '%H:%M'
 
 
 class Band:
-    def __init__(self, id, name, genre, tag_id=-1, tag_name=None):
+    def __init__(self, id, name, genre, description, tag_id=-1, tag_name=None, band_image=None):
         self.id = id
         self.name = name
         self.genre = genre
+        self.description = description
         self.tag_id = tag_id
         self.tag_name = tag_name
+        self.band_image = band_image
+
+
+class Venue:
+    def __init__(self, id=None, name=None, address=None, description=None, lat=None, lng=None):
+        self.id = id
+        self.name = name
+        self.address = address
+        self.description = description
+        self.lat = lat
+        self.lng = lng
 
 
 class Event(models.Model):
@@ -34,12 +47,8 @@ class Event(models.Model):
     price = models.FloatField(null=True, blank=True)
     price_preorder = models.FloatField(null=True, blank=True)
     ticket_link = models.CharField(max_length=200)
-    venue_id = models.BigIntegerField(null=True, blank=True)
-    venue_name = models.CharField(max_length=200, null=True, blank=True)
-    venue_address = models.CharField(max_length=200, null=True, blank=True)
-    venue_name_ext = models.CharField(max_length=200,null=True, blank=True)
-    venue_address_ext = models.CharField(max_length=200, null=True, blank=True)
 
+    venue = Venue()
     bands = []
 
 
@@ -52,7 +61,7 @@ class Event(models.Model):
                 event = Event()
 
                 event.id = event_api['id']
-                event.link = f'http://www.alcalaesmusica.org/events/{event.id}'
+                event.link = f'{URL_BASE}/events/{event.id}'
                 event.title = event_api['title']
                 event.description = event_api['description']
                 event.poster = event_api['poster']
@@ -68,17 +77,17 @@ class Event(models.Model):
                     continue
 
                 if event_api['venues']:
-                    event.venue_id = event_api['venues']['id']
-                    event.venue_name = event_api['venues']['name']
-                    event.venue_address = event_api['venues']['address']
-
-                event.venue_name_ext = event_api['venue_name']
-                event.venue_address_ext = event_api['venue_address']
+                    venue_api = event_api['venues']
+                    event.venue = Venue(venue_api['id'], venue_api['name'], venue_api['address'],
+                                        venue_api['description'], venue_api['latitude'], venue_api['longitude'])
+                else:
+                    event.venue = Venue(name=event_api['venue_name'], address=event_api['venue_address'])
 
                 event.bands = []
                 if event_api['bands']:
                     for item in event_api['bands']:
-                        band = Band(item['id'], item['name'], item['genre'])
+                        band = Band(item['id'], item['name'], item['genre'], item['description'])
+                        band.band_image = item['band_image']
                         if item['tag']:
                             band.tag_id = item['tag']['id']
                             band.tag_name = item['tag']['name']
@@ -98,7 +107,7 @@ class Event(models.Model):
         return events_sorted
 
     def get_place(self):
-        return f'{self.venue_name}' if self.venue_name else f'{self.venue_name_ext} ({self.venue_address_ext})'
+        return f'{self.venue.name}'
 
     def get_type_names(self):
         return ', '.join([event_type.name for event_type in self.event_types.all()])

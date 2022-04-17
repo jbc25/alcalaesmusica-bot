@@ -5,6 +5,8 @@ from bot.models.preference import Preference
 from datetime import datetime, timedelta
 from bot.utils.preference_keys import *
 from bot.utils.keyboards_markup import *
+from bot.utils.constants import URL_BASE
+from bot.utils.messages import *
 
 DATETIME_FORMAT_API = '%Y-%m-%d %H:%M:%S'
 
@@ -32,7 +34,7 @@ def get_events_cache():
 
 
 def get_events_api():
-    response = requests.get(f'https://alcalaesmusica.org/api/v1/upcoming_events/')
+    response = requests.get(f'{URL_BASE}/api/v1/upcoming_events/')
     if response.status_code == 200:
         events = Event.parse_events(response.text)
         Preference.set(PREF_EVENTS_CACHE, response.text)
@@ -66,11 +68,10 @@ def prepare_text(events, initial_text, no_events_text='No hay eventos próximame
 
     for i, event in enumerate(events):
         text += f'<b><a href="%s">%s</a></b>' % (event.link, event.title)
-        # text += '\n<i>➪ %s</i>' % event.get_type_names() if len(event.event_types.all()) > 0 else ''
-        text += '\n📅 %s: ' % event.get_date_human_format()
-        text += '\n🕑 %s' % event.get_time_human_format()
         for band in event.bands:
             text += '\n🎸 %s' % f'{band.name} ({band.tag_name})'
+        text += '\n📅 %s: ' % event.get_date_human_format()
+        text += '\n🕑 %s' % event.get_time_human_format()
         text += '\n📍 %s' % event.get_place()
         text += '\nMás info: /e' + str(event.id)
 
@@ -107,21 +108,6 @@ def send_event_info(event, bot, chat_id,):
         bot.send_message(chat_id=chat_id, text='No se ha encontrado información del evento', parse_mode="HTML",
                          reply_markup=telegram.ReplyKeyboardRemove())
     else:
-        text = f'<b><a href="%s">%s</a></b>' % (event.link, event.title)
-        text += '\n📅 %s: ' % event.get_date_human_format()
-        text += '\n🕑 %s' % event.get_time_human_format()
-        for band in event.bands:
-            text += '\n🎸 %s' % f'{band.name} ({band.tag_name})'
-        text += '\n📍 %s' % event.get_place()
-        if not event.price:
-            text += '\n💰 Gratuito'
-        else:
-            text += '\n💰 %.2f€' % event.price
-            if event.price_preorder:
-                text += '\n🤑 %.2f€' % event.price_preorder
-
-
-
-        bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML",
+        bot.send_message(chat_id=chat_id, text=event_info(event), parse_mode="HTML",
                          disable_web_page_preview=True,
                          reply_markup=event_info_keyboard(event))

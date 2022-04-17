@@ -9,6 +9,7 @@ from bot.utils.keyboards_markup import *
 from bot.models.preference import Preference
 from bot.utils.preference_keys import *
 from bot.models.user_chat import UserChat
+from bot.utils.messages import *
 
 
 def start(update, context):
@@ -124,13 +125,25 @@ def callback_query(update, context):
         event = get_event_by_id(id_event)
         band = next(filter(lambda b: b.id == id_band, event.bands))
         context.bot.answer_callback_query(callback_query_id=query.id)
-        context.bot.send_message(chat_id=chat_id, text=f'Evento: {event.title}, Banda: {band.name}', reply_markup=event_info_keyboard(event))
+
+        if band.band_image:
+            context.bot.send_photo(chat_id=chat_id, photo=f'{URL_BASE}{band.band_image}')
+
+        context.bot.send_message(chat_id=chat_id, text=band_info(band), parse_mode="HTML",
+                                 reply_markup=band_info_keyboard(event, band))
 
     elif type == InlineButton.VENUE_INFO:
         id_event = query_data['data']
         event = get_event_by_id(id_event)
         context.bot.answer_callback_query(callback_query_id=query.id)
-        context.bot.send_message(chat_id=chat_id, text=f'Lugar: {event.venue_name}', reply_markup=event_info_keyboard(event))
+        context.bot.send_message(chat_id=chat_id, text=venue_info(event.venue), parse_mode="HTML",
+                                 reply_markup=venue_info_keyboard(event))
+
+    elif type == InlineButton.EVENT_INFO:
+        id_event = query_data['data']
+        event = get_event_by_id(id_event)
+        context.bot.answer_callback_query(callback_query_id=query.id)
+        send_event_info(event, context.bot, chat_id)
 
 
 def notices(update, context):
