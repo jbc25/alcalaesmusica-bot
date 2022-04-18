@@ -10,6 +10,7 @@ from bot.models.preference import Preference
 from bot.utils.preference_keys import *
 from bot.models.user_chat import UserChat
 from bot.utils.messages import *
+from bot.views.news import *
 
 
 def start(update, context):
@@ -27,11 +28,18 @@ def start(update, context):
         events_notified.save()
 
     text = "<b>¡Bienvenid@!</b>\n\nA partir de ahora será muy fácil enterarte de los eventos musicales de la ciudad. " \
-           "Es muy fácil comunicarte conmigo, escríbeme /eventos y te prepararé en un instante la lista de los " \
-           "los próximos conciertos, podrás filtrar por estilos de música.\n\nSi solo " \
-           "te interesan los del siguiente fin de semana mándame un /finde.\n\nY si quieres que te avise automáticamente " \
-           "cuando haya nuevos conciertos que te interesen, mandame /avisos y elige los estilos que te gusten. " \
-           "Yo estaré siempre atento para avisarte y que no se te pase ninguno!"
+           "Es muy fácil comunicarte conmigo, escríbeme /conciertos y te prepararé en un instante la lista de los " \
+           "los próximos conciertos, podrás filtrar por estilos de música.\n\n" \
+           "También puedes ver los ciclos y festivales escribiendo /festivales\n\n" \
+           "Si solo te interesan los conciertos del siguiente fin de semana mándame un /finde.\n\n" \
+           "Y si quieres que te avise automáticamente cuando haya nuevos conciertos que te interesen, mandame " \
+           "/avisos y elige los estilos que te gusten.\n" \
+           "¡Yo estaré siempre atento para avisarte y que no se te pase ninguno!\n\n" \
+           "Y por último puedes pulsar /noticias para estar al tanto de las últimas publicaciones.\n" \
+           "Aunque tampoco te preocupes mucho por esto porque te enviaré nuevas noticias cuando se publiquen " \
+           "sin que tengas que hacer nada.\n\n" \
+           "Truco: No hace falta que te aprendas estas instrucciones, las tienes siempre a mano en el botón de menú azul" \
+           "abajo a la izquierda 😉"
 
     context.bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML", reply_markup=telegram.ReplyKeyboardRemove())
 
@@ -43,6 +51,23 @@ def events(update, context):
     try:
         events = get_events()
         prepare_text_and_send(events, '', context.bot, update.effective_chat.id, reply_markup=tags_access_keyboard())
+    except Exception as e:
+        send_dev_chat_message(context, str(e))
+
+        import traceback
+        print(traceback.format_exc())
+
+
+def festivals(update, context):
+
+    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=telegram.ChatAction.TYPING)
+
+    try:
+        festivals = get_festivals()
+        for fest in festivals:
+            context.bot.send_photo(chat_id=update.effective_chat.id, photo=fest.get_image_url(), caption=fest.caption(),
+                                   parse_mode="HTML", reply_markup=fest_keyboard(fest))
+
     except Exception as e:
         send_dev_chat_message(context, str(e))
 
@@ -88,6 +113,7 @@ def callback_query(update, context):
         context.bot.answer_callback_query(callback_query_id=query.id)
         context.bot.edit_message_reply_markup(chat_id=chat_id, message_id=query.message.message_id,
                                               reply_markup=tags_keyboard())
+        return
 
     elif type == InlineButton.FILTER_TAG:
         tag_id = query_data['data']
@@ -99,6 +125,7 @@ def callback_query(update, context):
         text = prepare_text(events_filtered, filter_text, no_events_text=f'No hay eventos para la categoría: {answer_text.upper()}')
         context.bot.edit_message_text(chat_id=chat_id, message_id=query.message.message_id,
                                       text=text[0], parse_mode="HTML", disable_web_page_preview=True, reply_markup=tags_keyboard())
+        return
 
     elif type == InlineButton.NOTICES_TAG:
         tag_id = query_data['data']
@@ -117,6 +144,7 @@ def callback_query(update, context):
         text = "Marca los tipos de música que te interesen y te avisaré cuando se publique alguno nuevo:"
         context.bot.edit_message_text(chat_id=chat_id, message_id=query.message.message_id,
                                       text=text, parse_mode="HTML", reply_markup=tags_notices_keyboard(chat_id))
+        return
 
     elif type == InlineButton.BAND_INFO:
         id_event_and_band = query_data['data']
@@ -124,7 +152,6 @@ def callback_query(update, context):
         id_band = int(id_event_and_band.split('-')[1])
         event = get_event_by_id(id_event)
         band = next(filter(lambda b: b.id == id_band, event.bands))
-        context.bot.answer_callback_query(callback_query_id=query.id)
 
         if band.band_image:
             context.bot.send_photo(chat_id=chat_id, photo=f'{URL_BASE}{band.band_image}')
@@ -135,7 +162,6 @@ def callback_query(update, context):
     elif type == InlineButton.VENUE_INFO:
         id_event = query_data['data']
         event = get_event_by_id(id_event)
-        context.bot.answer_callback_query(callback_query_id=query.id)
 
         if event.venue.image:
             context.bot.send_photo(chat_id=chat_id, photo=f'{URL_BASE}{event.venue.image}')
@@ -146,8 +172,16 @@ def callback_query(update, context):
     elif type == InlineButton.EVENT_INFO:
         id_event = query_data['data']
         event = get_event_by_id(id_event)
-        context.bot.answer_callback_query(callback_query_id=query.id)
         send_event_info(event, context.bot, chat_id)
+
+    elif type == InlineButton.FEST_EVENTS:
+        id_fest = query_data['data']
+        fest_events = get_festival_events(id_fest)
+        print(f'id_fest: {id_fest}, len: {len(fest_events)}')
+        prepare_text_and_send(fest_events, 'Conciertos del festival', context.bot, update.effective_chat.id,
+                                no_events_text='No hay conciertos para este festival')
+
+    context.bot.answer_callback_query(callback_query_id=query.id)
 
 
 def notices(update, context):
@@ -155,10 +189,17 @@ def notices(update, context):
         update.message.reply_text(text='Los avisos funcionan solo en chats privados. Hazlo directamente a través del bot: t.me/alcalaesmusicabot')
         return
 
-    text = "Marca los tipos de música que te interesen y te avisaré cuando se publique alguno nuevo:"
+    text = "Marca los tipos de música que te interesen y te avisaré cuando se publiquen nuevos conciertos:"
 
     chat_id = update.effective_chat.id
     context.bot.send_message(chat_id=chat_id, text=text, reply_markup=tags_notices_keyboard(chat_id))
+
+
+def news(update, context):
+    news_list = get_news_api()
+    text = '<b>¡Últimas noticias!</b>\n\n' + news_list_info(news_list)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
+                             disable_web_page_preview=True, reply_markup=telegram.ReplyKeyboardRemove())
 
 
 def remove_cache(update, context):
@@ -169,6 +210,9 @@ def remove_cache(update, context):
 
 
 def event_info_command(update, context):
+
+    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=telegram.ChatAction.TYPING)
+
     id_event = int(update.message.text.replace('/e', ''))
     event = get_event_by_id(id_event)
     send_event_info(event, context.bot, update.effective_chat.id)

@@ -1,6 +1,7 @@
 import requests
 import telegram
 from bot.models.event import Event
+from bot.models.festival import Festival
 from bot.models.preference import Preference
 from datetime import datetime, timedelta
 from bot.utils.preference_keys import *
@@ -53,6 +54,27 @@ def filter_events(tag_id):
             print(type(band.tag_id))
             print(type(tag_id))
             if int(band.tag_id) == tag_id:
+                filtered.append(event)
+    return filtered
+
+
+def get_festivals():
+
+    response = requests.get(f'{URL_BASE}/api/v1/microsites/')
+    if response.status_code == 200:
+        festivals = Festival.parse(response.text)
+        return festivals
+    else:
+        raise Exception(f'API error: {response.status_code}\n{response.text}')
+
+
+def get_festival_events(id_fest):
+    events = get_events()
+    filtered = []
+    for event in events:
+        print(f'event microsites len: {len(event.festivals)}')
+        for fest in event.festivals:
+            if int(fest) == id_fest:
                 filtered.append(event)
     return filtered
 

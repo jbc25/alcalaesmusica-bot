@@ -51,6 +51,7 @@ class Event(models.Model):
 
     venue = Venue()
     bands = []
+    festivals = []
 
 
     @staticmethod
@@ -94,6 +95,11 @@ class Event(models.Model):
                             band.tag_id = item['tag']['id']
                             band.tag_name = item['tag']['name']
                         event.bands.append(band)
+
+                event.festivals = []
+                if event_api['microsites']:
+                    for id_fest in event_api['microsites']:
+                        event.festivals.append(id_fest)
 
                 events.append(event)
             except Exception as e:

@@ -6,6 +6,7 @@ from bot.models.tag import Tag
 from bot.models.user_chat import UserChat
 from bot.models.event_notices import *
 from bot.views.events import *
+import time
 
 
 class Command(BaseCommand):
@@ -25,6 +26,7 @@ class Command(BaseCommand):
         user_chats = UserChat.objects.all()
 
         for user_chat in user_chats:
+            time.sleep(0.3)
             chat_id = user_chat.id_chat
             events_notified = EventNotified.objects.get(pk=chat_id)
             ids_events_notified = json.loads(events_notified.ids_events)

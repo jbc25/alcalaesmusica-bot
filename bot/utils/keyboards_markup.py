@@ -19,6 +19,7 @@ class InlineButton:
     BAND_INFO = "band_info"
     VENUE_INFO = "venue_info"
     EVENT_INFO = "event_info"
+    FEST_EVENTS = "fest_events"
 
 
 def create_inline_keyboard(items, buttons_per_row):
@@ -103,3 +104,12 @@ def venue_info_keyboard(event):
     items.append(InlineButton(f'Info del evento', InlineButton.EVENT_INFO, data=event.id))
 
     return create_inline_keyboard(items, 1)
+
+
+def fest_keyboard(fest):
+    items = [
+        InlineButton('Información', InlineButton.URL_BUTTON, url=fest.get_web_link()),
+        InlineButton('Conciertos', InlineButton.FEST_EVENTS, data=fest.id),
+    ]
+
+    return create_inline_keyboard(items, 2)

@@ -37,3 +37,13 @@ def event_info(event):
 
     return text
 
+
+def news_list_info(news_list):
+    separator = "\n\n〰〰〰〰〰〰〰〰〰\n\n"
+    text = separator
+    for news in news_list:
+        text += '🗞 <b><a href="%s">%s</a></b>' % (news.get_web_link(), news.title)
+        text += f'\n🗓 <i>{news.get_publication_date_human()}</i>'
+        text += f'\n{news.subtitle}{separator}'
+    return text
+
