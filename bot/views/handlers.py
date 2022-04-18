@@ -178,7 +178,7 @@ def callback_query(update, context):
         id_fest = query_data['data']
         fest_events = get_festival_events(id_fest)
         print(f'id_fest: {id_fest}, len: {len(fest_events)}')
-        prepare_text_and_send(fest_events, 'Conciertos del festival', context.bot, update.effective_chat.id,
+        prepare_text_and_send(fest_events, '', context.bot, update.effective_chat.id,
                                 no_events_text='No hay conciertos para este festival')
 
     context.bot.answer_callback_query(callback_query_id=query.id)
@@ -197,7 +197,7 @@ def notices(update, context):
 
 def news(update, context):
     news_list = get_news_api()
-    text = '<b>¡Últimas noticias!</b>\n\n' + news_list_info(news_list)
+    text = '<b>¡Últimas noticias!</b>' + news_list_info(news_list)
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
                              disable_web_page_preview=True, reply_markup=telegram.ReplyKeyboardRemove())
 
