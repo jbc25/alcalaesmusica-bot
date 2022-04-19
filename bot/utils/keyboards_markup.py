@@ -71,7 +71,7 @@ def event_info_keyboard(event):
         items.append(InlineButton('Comprar entradas', InlineButton.URL_BUTTON, url=event.ticket_link))
 
     for band in event.bands:
-        items.append(InlineButton(f'Información de la banda: {band.name}', InlineButton.BAND_INFO,
+        items.append(InlineButton(f'Información de {band.name}', InlineButton.BAND_INFO,
                                   data=str(event.id) + '-' + str(band.id)))
 
     items.append(InlineButton(f'Información del espacio', InlineButton.VENUE_INFO, data=event.id))
@@ -101,7 +101,7 @@ def venue_info_keyboard(event):
         url_venue_map = f'https://maps.google.com/?q={event.venue.lat},{event.venue.lng}'
         items.append(InlineButton('Localizar en el mapa', InlineButton.URL_BUTTON, url=url_venue_map))
 
-    items.append(InlineButton(f'Info del evento', InlineButton.EVENT_INFO, data=event.id))
+    items.append(InlineButton(f'Información del evento', InlineButton.EVENT_INFO, data=event.id))
 
     return create_inline_keyboard(items, 1)
 
