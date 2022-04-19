@@ -38,8 +38,8 @@ def start(update, context):
            "Y por último puedes pulsar /noticias para estar al tanto de las últimas publicaciones.\n" \
            "Aunque tampoco te preocupes mucho por esto porque te enviaré nuevas noticias cuando se publiquen " \
            "sin que tengas que hacer nada.\n\n" \
-           "Truco: No hace falta que te aprendas estas instrucciones, las tienes siempre a mano en el botón de menú azul" \
-           "abajo a la izquierda 😉"
+           "Truco: No hace falta que te aprendas estas instrucciones, las tienes siempre a mano en el botón de " \
+           "menú azul abajo a la izquierda 😉"
 
     context.bot.send_message(chat_id=chat_id, text=text, parse_mode="HTML", reply_markup=telegram.ReplyKeyboardRemove())
 
