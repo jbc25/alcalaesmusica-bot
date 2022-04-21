@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 import logging
 
-from .token import alcala_es_musica_bot_token
+from .token import *
 import locale
 
 
@@ -56,6 +56,7 @@ class BotConfig(AppConfig):
         dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('(?i)noticias'), handlers.news))
 
         dispatcher.add_handler(CommandHandler('cache', handlers.remove_cache))
+        dispatcher.add_handler(CommandHandler('datos', handlers.data))
 
         dispatcher.add_handler(CallbackQueryHandler(handlers.callback_query))
 

@@ -141,7 +141,7 @@ def callback_query(update, context):
 
         context.bot.answer_callback_query(callback_query_id=query.id)
 
-        text = "Marca los tipos de música que te interesen y te avisaré cuando se publique alguno nuevo:"
+        text = "Marca los tipos de música que te interesen y te avisaré cuando se publiquen nuevos conciertos:"
         context.bot.edit_message_text(chat_id=chat_id, message_id=query.message.message_id,
                                       text=text, parse_mode="HTML", reply_markup=tags_notices_keyboard(chat_id))
         return
@@ -220,6 +220,21 @@ def event_info_command(update, context):
 
 def any_text(update, context):
     text = f'No sé lo que me quieres decir pero por si acaso: ¡<b>{update.message.text}</b> lo serás tu! 😝'
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
+                             reply_markup=telegram.ReplyKeyboardRemove())
+
+
+def data(update, context):
+    chat_id = update.effective_chat.id
+    is_admin = UserChat.objects.get(id_chat=chat_id).is_admin
+    if not is_admin:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text='Esta operación está solo disponible para administradores',
+                                 parse_mode="HTML", reply_markup=telegram.ReplyKeyboardRemove())
+        return
+
+    users = UserChat.objects.all()
+    text = f'Número de usuarios: {len(users)}'
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
                              reply_markup=telegram.ReplyKeyboardRemove())
 
