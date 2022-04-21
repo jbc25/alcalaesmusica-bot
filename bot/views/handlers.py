@@ -233,8 +233,21 @@ def data(update, context):
                                  parse_mode="HTML", reply_markup=telegram.ReplyKeyboardRemove())
         return
 
-    users = UserChat.objects.all()
-    text = f'Número de usuarios: {len(users)}'
+    user_count = UserChat.objects.all().count()
+    text = f'Número de usuarios: <b>{user_count}</b>'
+
+    tags_subscriptions = {}
+    tags = Tag.objects.all()
+    for tag in tags:
+        subscriptions = TagNotice.objects.filter(tag=tag, subscribed=True).count()
+        tags_subscriptions[tag.name] = subscriptions
+
+    sorted_tags = sorted(tags_subscriptions.items(), key=lambda item: item[1], reverse=True)
+
+    text += '\n\nRanking de suscripciones a estilos musicales:\n\n'
+    for item in sorted_tags:
+        text += f'{item[0]}: {item[1]}\n'
+
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
                              reply_markup=telegram.ReplyKeyboardRemove())
 
