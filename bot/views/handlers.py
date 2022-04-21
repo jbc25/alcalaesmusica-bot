@@ -246,7 +246,7 @@ def data(update, context):
 
     text += '\n\nRanking de suscripciones a estilos musicales:\n\n'
     for item in sorted_tags:
-        text += f'{item[0]}: {item[1]}\n'
+        text += f'{item[0]}: <b>{item[1]}</b>\n'
 
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
                              reply_markup=telegram.ReplyKeyboardRemove())
