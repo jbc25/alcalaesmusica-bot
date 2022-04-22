@@ -81,17 +81,17 @@ def finde(update, context):
 
     events_finde = []
     for event in events:
-        friday = 4
+        thursday = 3
         sunday = 6
         today = datetime.now()
-        friday_this_week = (today + timedelta(friday - today.weekday())).replace(hour=0, minute=0, second=0)
+        thursday_this_week = (today + timedelta(thursday - today.weekday())).replace(hour=0, minute=0, second=0)
         sunday_this_week = (today + timedelta(sunday - today.weekday())).replace(hour=23, minute=59, second=59)
 
-        # ini = friday_this_week.strftime("%Y-%m-%d %H:%M:%S")
+        # ini = thursday_this_week.strftime("%Y-%m-%d %H:%M:%S")
         # end = sunday_this_week.strftime("%Y-%m-%d %H:%M:%S")
         # print(f'Inicio: {ini}, final {end}, hoy: {today}')
 
-        if event.date_between(friday_this_week, sunday_this_week):
+        if event.date_between(thursday_this_week, sunday_this_week):
             events_finde.append(event)
 
     prepare_text_and_send(events_finde, 'Eventos del próximo fin de semana', context.bot, update.effective_chat.id,

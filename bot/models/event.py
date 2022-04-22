@@ -75,7 +75,7 @@ class Event(models.Model):
                 event.price_preorder = event_api['price_preorder']
                 event.ticket_link = event_api['ticket_link']
 
-                if is_old(event):   # or is_too_future(event):
+                if is_old(event) or is_too_future(event):
                     continue
 
                 if event_api['venues']:
@@ -181,7 +181,7 @@ def is_old(event):
 def is_too_future(event):
     try:
         day = datetime.strptime(event.datetime, DATETIME_FORMAT_API)
-        future = datetime.now() + timedelta(days=30)
+        future = datetime.now() + timedelta(days=60)
         return day > future
     except:
         print("(caught) error date: " + event.date_to)
