@@ -9,6 +9,7 @@ from bot.views.events import *
 from bot.views.news import *
 from bot.utils.messages import *
 import time
+from bot.token import *
 
 
 class Command(BaseCommand):
@@ -42,7 +43,10 @@ class Command(BaseCommand):
 
         text_new_news = '<b>¡Noticias frescas!</b>' + news_list_info(news_notify)
 
-        user_chats = UserChat.objects.all()
+        if developing:
+            user_chats = UserChat.objects.filter(id_chat=dev_chat_id)
+        else:
+            user_chats = UserChat.objects.all()
 
         for user_chat in user_chats:
             time.sleep(0.3)

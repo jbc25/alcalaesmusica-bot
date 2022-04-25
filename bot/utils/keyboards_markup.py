@@ -56,10 +56,10 @@ def tags_notices_keyboard(chat_id):
     tags = Tag.objects.all()
 
     for tag in tags:
-        tag_notices_active = TagNotice.objects.filter(id_chat=chat_id, tag__id=tag.id).first()
-        if tag_notices_active is not None:
-            print(tag_notices_active)
-            tag.name = ("✅ " if tag_notices_active.subscribed else "") + tag.name
+        tag_subscriptions_active = TagSubscription.objects.filter(id_chat=chat_id, tag__id=tag.id).first()
+        if tag_subscriptions_active is not None:
+            print(tag_subscriptions_active)
+            tag.name = ("✅ " if tag_subscriptions_active.subscribed else "") + tag.name
 
     items = list(map(lambda tag: InlineButton(tag.name, InlineButton.NOTICES_TAG, data=tag.id), tags))
     return create_inline_keyboard(items, 3)

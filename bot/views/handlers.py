@@ -11,6 +11,8 @@ from bot.utils.preference_keys import *
 from bot.models.user_chat import UserChat
 from bot.utils.messages import *
 from bot.views.news import *
+from bot.token import *
+from django.db.models import Count
 
 
 def start(update, context):
@@ -130,14 +132,14 @@ def callback_query(update, context):
     elif type == InlineButton.NOTICES_TAG:
         tag_id = query_data['data']
         tag = Tag.objects.get(id=tag_id)
-        tag_notice = TagNotice.objects.filter(id_chat=chat_id, tag__id=tag.id).first()
+        tag_subscription = TagSubscription.objects.filter(id_chat=chat_id, tag__id=tag.id).first()
 
-        if tag_notice:
-            tag_notice.subscribed = not tag_notice.subscribed
-            tag_notice.save()
+        if tag_subscription:
+            tag_subscription.subscribed = not tag_subscription.subscribed
+            tag_subscription.save()
         else:
-            tag_notice = TagNotice(id_chat=chat_id, tag=tag, subscribed=True)
-            tag_notice.save()
+            tag_subscription = TagSubscription(id_chat=chat_id, tag=tag, subscribed=True)
+            tag_subscription.save()
 
         context.bot.answer_callback_query(callback_query_id=query.id)
 
@@ -239,7 +241,7 @@ def data(update, context):
     tags_subscriptions = {}
     tags = Tag.objects.all()
     for tag in tags:
-        subscriptions = TagNotice.objects.filter(tag=tag, subscribed=True).count()
+        subscriptions = TagSubscription.objects.filter(tag=tag, subscribed=True).count()
         tags_subscriptions[tag.name] = subscriptions
 
     sorted_tags = sorted(tags_subscriptions.items(), key=lambda item: item[1], reverse=True)
@@ -248,9 +250,16 @@ def data(update, context):
     for item in sorted_tags:
         text += f'{item[0]}: <b>{item[1]}</b>\n'
 
+    results = TagSubscription.objects.all().values('id_chat').annotate(dcount=Count('id_chat')).order_by()
+
+    users_with_subscription_count = len(results)
+    users_with_no_subscription_count = user_count - users_with_subscription_count
+
+    text += f"\n\nUsuarios sin suscripciones: <b>{users_with_no_subscription_count}</b>"
+
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
                              reply_markup=telegram.ReplyKeyboardRemove())
 
 
 def send_dev_chat_message(context, message):
-    context.bot.send_message(chat_id=15480516, text='AemBot dev message:\n' + message)
+    context.bot.send_message(chat_id=dev_chat_id, text='AemBot dev message:\n' + message)

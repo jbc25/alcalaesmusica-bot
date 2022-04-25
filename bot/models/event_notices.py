@@ -4,7 +4,7 @@ from bot.models.tag import Tag
 import json
 
 
-class TagNotice(models.Model):
+class TagSubscription(models.Model):
     id_chat = models.BigIntegerField(blank=True) # In private chats user_id is the same as chat_id: https://stackoverflow.com/a/59750179/1365440
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=True)
     subscribed = models.BooleanField()

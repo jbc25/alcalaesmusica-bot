@@ -7,6 +7,7 @@ from bot.models.user_chat import UserChat
 from bot.models.event_notices import *
 from bot.views.events import *
 import time
+from bot.token import *
 
 
 class Command(BaseCommand):
@@ -23,7 +24,10 @@ class Command(BaseCommand):
         if not events:
             return
 
-        user_chats = UserChat.objects.all()
+        if developing:
+            user_chats = UserChat.objects.filter(id_chat=dev_chat_id)
+        else:
+            user_chats = UserChat.objects.all()
 
         for user_chat in user_chats:
             time.sleep(0.3)
@@ -33,7 +37,7 @@ class Command(BaseCommand):
 
             events_notify = []
 
-            has_subscriptions = TagNotice.objects.filter(id_chat=chat_id)
+            has_subscriptions = TagSubscription.objects.filter(id_chat=chat_id)
 
             for event in events:
                 # If no subscriptions, notify all
@@ -43,8 +47,8 @@ class Command(BaseCommand):
                         ids_events_notified.append(event.id)
                 else:
                     for band in event.bands:
-                        tag_notice = TagNotice.objects.filter(id_chat=chat_id, tag__id=band.tag_id).first()
-                        if tag_notice and tag_notice.subscribed:
+                        tag_subscription = TagSubscription.objects.filter(id_chat=chat_id, tag__id=band.tag_id).first()
+                        if tag_subscription and tag_subscription.subscribed:
                             if event.id not in ids_events_notified:
                                 events_notify.append(event)
                                 ids_events_notified.append(event.id)
