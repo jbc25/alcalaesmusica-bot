@@ -92,7 +92,7 @@ def prepare_text(events, initial_text, no_events_text='No hay eventos próximame
         text += f'<b><a href="%s">%s</a></b>' % (event.link, event.title)
         for band in event.bands:
             text += '\n🎸 %s' % f'{band.name} ({band.tag_name})'
-        text += '\n📅 %s: ' % event.get_date_human_format()
+        text += '\n📅 %s' % event.get_date_human_format()
         text += '\n🕑 %s' % event.get_time_human_format()
         text += '\n📍 %s' % event.get_place()
         text += '\nMás info: /e' + str(event.id)
