@@ -66,6 +66,12 @@ def festivals(update, context):
 
     try:
         festivals = get_festivals()
+
+        if not festivals:
+            update.message.reply_text(text='🤷‍♀️ Ahora mismo no hay ciclos o festivales a la vista.'
+                                           '\n📢 ¡Te avisaré cuando se organicen!')
+            return
+
         for fest in festivals:
             context.bot.send_photo(chat_id=update.effective_chat.id, photo=fest.get_image_url(), caption=fest.caption(),
                                    parse_mode="HTML", reply_markup=fest_keyboard(fest))
