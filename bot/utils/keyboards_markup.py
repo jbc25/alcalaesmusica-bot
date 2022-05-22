@@ -113,3 +113,8 @@ def fest_keyboard(fest):
     ]
 
     return create_inline_keyboard(items, 2)
+
+
+def custom_fest_keyboard(fest_buttons):
+    items = list(map(lambda button: InlineButton(button[0], InlineButton.URL_BUTTON, url=button[1]), fest_buttons))
+    return create_inline_keyboard(items, 1)

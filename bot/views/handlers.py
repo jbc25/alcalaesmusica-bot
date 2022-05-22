@@ -66,8 +66,9 @@ def festivals(update, context):
 
     try:
         festivals = get_festivals()
+        custom_festivals = create_custom_festivals()
 
-        if not festivals:
+        if not festivals and not custom_festivals:
             update.message.reply_text(text='🤷‍♀️ Ahora mismo no hay ciclos o festivales a la vista.'
                                            '\n📢 ¡Te avisaré cuando se organicen!')
             return
@@ -76,11 +77,38 @@ def festivals(update, context):
             context.bot.send_photo(chat_id=update.effective_chat.id, photo=fest.get_image_url(), caption=fest.caption(),
                                    parse_mode="HTML", reply_markup=fest_keyboard(fest))
 
+        for custom_fest in custom_festivals:
+            context.bot.send_photo(chat_id=update.effective_chat.id, photo=custom_fest['image'],
+                                   caption=custom_fest['caption'],
+                                   parse_mode="HTML", reply_markup=custom_fest_keyboard(custom_fest['buttons']))
+
+
     except Exception as e:
         send_dev_chat_message(context, str(e))
 
         import traceback
         print(traceback.format_exc())
+
+
+def create_custom_festivals():
+    custom_festivals = []
+
+    # Copy paste this block for each custom festival (not included in "microsites")
+    if datetime.now() <= datetime(2022, 6, 5, 23, 59, 59):
+        custom_fest = {
+            'image': 'https://alcalasuena.es/static/img/logo2022.png',
+            'caption': f'<b>Alcalá Suena</b>\n<i>03/06/2022 - 05/06/2022</i>',
+            'buttons': [
+                ('Visitar página web', 'https://alcalasuena.es/'),
+                ('Descargar app Android', 'https://play.google.com/store/apps/details?id=com.triskelapps.alcalasuena'),
+                ('Descargar app iOS', 'https://apps.apple.com/es/app/alcala-suena/id1458551516?l=es&ls=1')
+            ]
+        }
+        custom_festivals.append(custom_fest)
+    # -------
+
+    return custom_festivals
+
 
 
 def finde(update, context):
