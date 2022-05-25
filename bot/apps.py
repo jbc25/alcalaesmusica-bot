@@ -41,19 +41,19 @@ class BotConfig(AppConfig):
         dispatcher.add_handler(CommandHandler('start', handlers.start))
 
         dispatcher.add_handler(CommandHandler('conciertos', handlers.events))
-        dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('(?i)conciertos'), handlers.events))
+        dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('^(?i)conciertos$'), handlers.events))
 
         dispatcher.add_handler(CommandHandler('festivales', handlers.festivals))
-        dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('(?i)festivales'), handlers.festivals))
+        dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('^(?i)festivales$'), handlers.festivals))
 
         dispatcher.add_handler(CommandHandler('finde', handlers.finde))
-        dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('(?i)finde'), handlers.finde))
+        dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('^(?i)finde$'), handlers.finde))
 
         dispatcher.add_handler(CommandHandler('avisos', handlers.notices))
-        dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('(?i)avisos'), handlers.notices))
+        dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('^(?i)avisos$'), handlers.notices))
 
         dispatcher.add_handler(CommandHandler('noticias', handlers.news))
-        dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('(?i)noticias'), handlers.news))
+        dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('^(?i)noticias$'), handlers.news))
 
         dispatcher.add_handler(CommandHandler('cache', handlers.remove_cache))
         dispatcher.add_handler(CommandHandler('datos', handlers.data))
