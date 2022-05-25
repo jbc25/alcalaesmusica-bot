@@ -20,6 +20,7 @@ class InlineButton:
     VENUE_INFO = "venue_info"
     EVENT_INFO = "event_info"
     FEST_EVENTS = "fest_events"
+    ADMIN_MESSAGE = "admin_message"
 
 
 def create_inline_keyboard(items, buttons_per_row):
@@ -118,3 +119,12 @@ def fest_keyboard(fest):
 def custom_fest_keyboard(fest_buttons):
     items = list(map(lambda button: InlineButton(button[0], InlineButton.URL_BUTTON, url=button[1]), fest_buttons))
     return create_inline_keyboard(items, 1)
+
+
+def admin_message_keyboard():
+
+    items = [
+        InlineButton('Enviar', InlineButton.ADMIN_MESSAGE),
+    ]
+
+    return create_inline_keyboard(items, 2)

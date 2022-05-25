@@ -8,8 +8,8 @@ from bot.models.event_notices import *
 from bot.views.events import *
 from bot.views.news import *
 from bot.utils.messages import *
-import time
 from bot.token import *
+from bot.utils.send_msg import send_to_all
 
 
 class Command(BaseCommand):
@@ -42,15 +42,5 @@ class Command(BaseCommand):
         Preference.set(PREF_NOTIFIED_NEWS_IDS, json.dumps(notified_news_ids))
 
         text_new_news = '<b>¡Noticias frescas!</b>' + news_list_info(news_notify)
-
-        if developing:
-            user_chats = UserChat.objects.filter(id_chat=dev_chat_id)
-        else:
-            user_chats = UserChat.objects.all()
-
-        for user_chat in user_chats:
-            time.sleep(0.3)
-            chat_id = user_chat.id_chat
-            bot.send_message(chat_id=chat_id, text=text_new_news, parse_mode="HTML",
-                             disable_web_page_preview=True, reply_markup=telegram.ReplyKeyboardRemove())
+        send_to_all(bot, text_new_news)
 

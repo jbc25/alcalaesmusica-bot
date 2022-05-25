@@ -13,6 +13,7 @@ from bot.utils.messages import *
 from bot.views.news import *
 from bot.token import *
 from django.db.models import Count
+from bot.utils.send_msg import send_to_all
 
 
 def start(update, context):
@@ -217,6 +218,10 @@ def callback_query(update, context):
         prepare_text_and_send(fest_events, '', context.bot, update.effective_chat.id,
                                 no_events_text='No hay conciertos para este festival')
 
+    elif type == InlineButton.ADMIN_MESSAGE:
+        message = query.message.text
+        send_to_all(context.bot, message)
+
     context.bot.answer_callback_query(callback_query_id=query.id)
 
 
@@ -255,9 +260,15 @@ def event_info_command(update, context):
 
 
 def any_text(update, context):
-    text = f'No sé lo que me quieres decir pero por si acaso: ¡<b>{update.message.text}</b> lo serás tu! 😝'
-    context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
+    chat_id = update.effective_chat.id
+    is_admin = UserChat.objects.get(id_chat=chat_id).is_admin
+    if not is_admin:
+        text = f'No sé lo que me quieres decir pero por si acaso: ¡<b>{update.message.text}</b> lo serás tu! 😝'
+        context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
                              reply_markup=telegram.ReplyKeyboardRemove())
+    else:
+        context.bot.send_message(chat_id=chat_id, text=update.message.text,
+                             reply_markup=admin_message_keyboard())
 
 
 def data(update, context):
