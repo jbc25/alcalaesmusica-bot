@@ -14,6 +14,7 @@ from bot.views.news import *
 from bot.token import *
 from django.db.models import Count
 from bot.utils.send_msg import send_to_all
+from bot.models.analytic import Analytic
 
 
 def start(update, context):
@@ -60,6 +61,8 @@ def events(update, context):
         import traceback
         print(traceback.format_exc())
 
+    Analytic.save_analytic(Analytic.TYPE_COMMAND, "conciertos")
+
 
 def festivals(update, context):
 
@@ -83,12 +86,10 @@ def festivals(update, context):
                                    caption=custom_fest['caption'],
                                    parse_mode="HTML", reply_markup=custom_fest_keyboard(custom_fest['buttons']))
 
-
     except Exception as e:
         send_dev_chat_message(context, str(e))
 
-        import traceback
-        print(traceback.format_exc())
+    Analytic.save_analytic(Analytic.TYPE_COMMAND, "festivales")
 
 
 def create_custom_festivals():
@@ -134,6 +135,8 @@ def finde(update, context):
     prepare_text_and_send(events_finde, 'Eventos del próximo fin de semana', context.bot, update.effective_chat.id,
                           no_events_text='No hay eventos para el fin de semana')
 
+    Analytic.save_analytic(Analytic.TYPE_COMMAND, "finde")
+
 
 def callback_query(update, context):
 
@@ -150,6 +153,8 @@ def callback_query(update, context):
         context.bot.answer_callback_query(callback_query_id=query.id)
         context.bot.edit_message_reply_markup(chat_id=chat_id, message_id=query.message.message_id,
                                               reply_markup=tags_keyboard())
+
+        Analytic.save_analytic(Analytic.TYPE_INLINE_BUTTON, type)
         return
 
     elif type == InlineButton.FILTER_TAG:
@@ -162,6 +167,8 @@ def callback_query(update, context):
         text = prepare_text(events_filtered, filter_text, no_events_text=f'No hay eventos para la categoría: {answer_text.upper()}')
         context.bot.edit_message_text(chat_id=chat_id, message_id=query.message.message_id,
                                       text=text[0], parse_mode="HTML", disable_web_page_preview=True, reply_markup=tags_keyboard())
+
+        Analytic.save_analytic(Analytic.TYPE_INLINE_BUTTON, type, data_text=tag.name, data_id=tag.id)
         return
 
     elif type == InlineButton.NOTICES_TAG:
@@ -181,6 +188,8 @@ def callback_query(update, context):
         text = "Marca los tipos de música que te interesen y te avisaré cuando se publiquen nuevos conciertos:"
         context.bot.edit_message_text(chat_id=chat_id, message_id=query.message.message_id,
                                       text=text, parse_mode="HTML", reply_markup=tags_notices_keyboard(chat_id))
+
+        Analytic.save_analytic(Analytic.TYPE_INLINE_BUTTON, type, data_text=tag.name, data_id=tag.id)
         return
 
     elif type == InlineButton.BAND_INFO:
@@ -196,6 +205,8 @@ def callback_query(update, context):
         context.bot.send_message(chat_id=chat_id, text=band_info(band), parse_mode="HTML",
                                  reply_markup=band_info_keyboard(event, band))
 
+        Analytic.save_analytic(Analytic.TYPE_INLINE_BUTTON, type, data_text=band.name, data_id=band.id)
+
     elif type == InlineButton.VENUE_INFO:
         id_event = query_data['data']
         event = get_event_by_id(id_event)
@@ -206,10 +217,14 @@ def callback_query(update, context):
         context.bot.send_message(chat_id=chat_id, text=venue_info(event.venue), parse_mode="HTML",
                                  reply_markup=venue_info_keyboard(event))
 
+        Analytic.save_analytic(Analytic.TYPE_INLINE_BUTTON, type, data_text=event.venue.name, data_id=event.venue.id)
+
     elif type == InlineButton.EVENT_INFO:
         id_event = query_data['data']
         event = get_event_by_id(id_event)
         send_event_info(event, context.bot, chat_id)
+
+        Analytic.save_analytic(Analytic.TYPE_INLINE_BUTTON, type, data_text=event.title, data_id=event.id)
 
     elif type == InlineButton.FEST_EVENTS:
         id_fest = query_data['data']
@@ -217,6 +232,8 @@ def callback_query(update, context):
         print(f'id_fest: {id_fest}, len: {len(fest_events)}')
         prepare_text_and_send(fest_events, '', context.bot, update.effective_chat.id,
                                 no_events_text='No hay conciertos para este festival')
+
+        Analytic.save_analytic(Analytic.TYPE_INLINE_BUTTON, type, data_id=id_fest)
 
     elif type == InlineButton.ADMIN_MESSAGE:
         message = query.message.text
@@ -235,12 +252,16 @@ def notices(update, context):
     chat_id = update.effective_chat.id
     context.bot.send_message(chat_id=chat_id, text=text, reply_markup=tags_notices_keyboard(chat_id))
 
+    Analytic.save_analytic(Analytic.TYPE_COMMAND, "avisos")
+
 
 def news(update, context):
     news_list = get_news_api()
     text = '<b>¡Últimas noticias!</b>' + news_list_info(news_list)
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
                              disable_web_page_preview=True, reply_markup=telegram.ReplyKeyboardRemove())
+
+    Analytic.save_analytic(Analytic.TYPE_COMMAND, "noticias")
 
 
 def remove_cache(update, context):
@@ -258,6 +279,8 @@ def event_info_command(update, context):
     event = get_event_by_id(id_event)
     send_event_info(event, context.bot, update.effective_chat.id)
 
+    Analytic.save_analytic(Analytic.TYPE_COMMAND, "event_info", data_text=event.title, data_id=event.id)
+
 
 def any_text(update, context):
     chat_id = update.effective_chat.id
@@ -269,6 +292,8 @@ def any_text(update, context):
     else:
         context.bot.send_message(chat_id=chat_id, text=update.message.text,
                              reply_markup=admin_message_keyboard())
+
+    Analytic.save_analytic(Analytic.TYPE_FREE_TEXT, "text_free", data_text=update.message.text)
 
 
 def data(update, context):
@@ -301,6 +326,17 @@ def data(update, context):
     users_with_no_subscription_count = user_count - users_with_subscription_count
 
     text += f"\n\nUsuarios sin suscripciones: <b>{users_with_no_subscription_count}</b>"
+
+    text += "\n\n<b>Analíticas de uso</b>\n\n"
+
+    analytics_counts = Analytic.objects.all().values('type', 'name').annotate(total=Count('type')).order_by('type')
+    for analytic_count in analytics_counts:
+        text += f"{analytic_count['type']} -> {analytic_count['name']}: <b>{analytic_count['total']}</b>\n"
+
+    text += '\n<b>Textos libres</b>\n\n'
+    free_texts = Analytic.objects.filter(type=Analytic.TYPE_FREE_TEXT)
+    for free_text in free_texts:
+        text += f'{free_text.data_text}\n'
 
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
                              reply_markup=telegram.ReplyKeyboardRemove())
