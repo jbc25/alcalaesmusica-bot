@@ -120,9 +120,6 @@ class Event(models.Model):
     def get_type_names(self):
         return ', '.join([event_type.name for event_type in self.event_types.all()])
 
-    def get_date_from_human_format(self):
-        return self.convert_date_to_human_format(self.date_from)
-
     def get_date_to_human_format(self):
         return self.convert_date_to_human_format(self.date_to)
 
@@ -134,21 +131,6 @@ class Event(models.Model):
     def get_time_human_format(self):
         time_human = self.convert_datetime_formats(self.time, TIME_FORMAT_API, TIME_FORMAT_HUMAN)
         return time_human
-
-    def get_times(self):
-        time_human_from = self.convert_datetime_formats(self.date_from, DATETIME_FORMAT_API, TIME_FORMAT_HUMAN)
-        time_human_to = self.convert_datetime_formats(self.date_to, DATETIME_FORMAT_API, TIME_FORMAT_HUMAN)
-        if time_human_from == time_human_to:
-            return time_human_from
-        else:
-            return 'De %s a %s' % (time_human_from, time_human_to)
-        pass
-
-    def has_times(self):
-        time_human_from = self.convert_datetime_formats(self.date_from, DATETIME_FORMAT_API, '%H:%M:%S')
-        time_human_to = self.convert_datetime_formats(self.date_to, DATETIME_FORMAT_API, '%H:%M:%S')
-        return not (time_human_to == time_human_from == '00:00:00')
-
 
     @staticmethod
     def convert_date_to_human_format(date):
@@ -165,7 +147,7 @@ class Event(models.Model):
         return date_begin <= date <= date_end
 
     def __str__(self):
-        return f'{self.title} - {self.date_from}'
+        return f'{self.title} - {self.datetime}'
 
 
 def is_old(event):

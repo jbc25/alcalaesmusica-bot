@@ -180,7 +180,7 @@ def callback_query(update, context):
             tag_subscription.subscribed = not tag_subscription.subscribed
             tag_subscription.save()
         else:
-            tag_subscription = TagSubscription(id_chat=chat_id, tag=tag, subscribed=True)
+            tag_subscription = TagSubscription(id_chat=chat_id, tag=tag, subscribed=False)
             tag_subscription.save()
 
         context.bot.answer_callback_query(callback_query_id=query.id)

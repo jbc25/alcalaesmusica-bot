@@ -46,12 +46,18 @@ class Command(BaseCommand):
                         events_notify.append(event)
                         ids_events_notified.append(event.id)
                 else:
-                    for band in event.bands:
-                        tag_subscription = TagSubscription.objects.filter(id_chat=chat_id, tag__id=band.tag_id).first()
-                        if tag_subscription and tag_subscription.subscribed:
-                            if event.id not in ids_events_notified:
-                                events_notify.append(event)
-                                ids_events_notified.append(event.id)
+                    if len(event.bands) == 0:
+                        # Don't know what band and tag is so just notify it
+                        if event.id not in ids_events_notified:
+                            events_notify.append(event)
+                            ids_events_notified.append(event.id)
+                    else:
+                        for band in event.bands:
+                            tag_subscription = TagSubscription.objects.filter(id_chat=chat_id, tag__id=band.tag_id).first()
+                            if not tag_subscription or (tag_subscription and tag_subscription.subscribed) or band.tag_id == -1:
+                                if event.id not in ids_events_notified:
+                                    events_notify.append(event)
+                                    ids_events_notified.append(event.id)
 
             print(f'Notifying {len(events_notify)} events')
 
