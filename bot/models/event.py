@@ -59,6 +59,11 @@ class Event(models.Model):
         events_api = json.loads(events_api_json)['events']
         events = []
         for event_api in events_api:
+
+            # Required data to process event
+            if not event_api['time'] or not event_api['day']:
+                continue
+
             try:
                 event = Event()
 
@@ -120,9 +125,6 @@ class Event(models.Model):
     def get_type_names(self):
         return ', '.join([event_type.name for event_type in self.event_types.all()])
 
-    def get_date_to_human_format(self):
-        return self.convert_date_to_human_format(self.date_to)
-
     def get_date_human_format(self):
         date_human = self.convert_datetime_formats(self.day, DATE_FORMAT_API, DATE_FORMAT_HUMAN)
         day_of_week = self.convert_datetime_formats(self.day, DATE_FORMAT_API, "%A")
@@ -156,7 +158,7 @@ def is_old(event):
         now = datetime.now()
         return day <= now
     except:
-        print("(caught) error date: " + event.date_to)
+        print("(caught) error date: " + event.datetime)
         return False
 
 
@@ -166,7 +168,7 @@ def is_too_future(event):
         future = datetime.now() + timedelta(days=60)
         return day > future
     except:
-        print("(caught) error date: " + event.date_to)
+        print("(caught) error date: " + event.datetime)
         return False
 
 
