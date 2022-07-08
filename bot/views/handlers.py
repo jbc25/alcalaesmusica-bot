@@ -286,14 +286,18 @@ def any_text(update, context):
     chat_id = update.effective_chat.id
     is_admin = UserChat.objects.get(id_chat=chat_id).is_admin
     if not is_admin:
-        text = f'No sé lo que me quieres decir pero por si acaso: ¡<b>{update.message.text}</b> lo serás tu! 😝'
+        text = 'Lo siento, no se lo que me quieres decir 🤔. Estoy dando clases de lenguaje humano pero con tantos ' \
+               'conciertos no tengo ni tiempo! 😝\n\nℹ Eso sí, puedo darte toda la información que necesites si me mandas ' \
+               'las palabras que entiendo, pulsa el botón "Menú" abajo a la izquierda ↙ y mándame lo que necesites, ' \
+               'también entiendo algunos textos dentro de mensajes que empiezan con esta barra / y que puedes pulsar ' \
+               'para enviarlo rápidamente.\n\n¡Gracias por comprender a este bot sin cerebro pero con alma rockera! 🤖🎸'
         context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
                              reply_markup=telegram.ReplyKeyboardRemove())
+        Analytic.save_analytic(Analytic.TYPE_FREE_TEXT, "text_free", data_text=update.message.text)
     else:
         context.bot.send_message(chat_id=chat_id, text=update.message.text,
                              reply_markup=admin_message_keyboard())
 
-    Analytic.save_analytic(Analytic.TYPE_FREE_TEXT, "text_free", data_text=update.message.text)
 
 
 def data(update, context):
