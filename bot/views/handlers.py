@@ -257,6 +257,8 @@ def notices(update, context):
 
 def news(update, context):
     news_list = get_news_api()
+    size = len(news_list)
+    news_list = news_list[size-6:size]
     text = '<b>¡Últimas noticias!</b>' + news_list_info(news_list)
     context.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode="HTML",
                              disable_web_page_preview=True, reply_markup=telegram.ReplyKeyboardRemove())
