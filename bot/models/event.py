@@ -34,6 +34,8 @@ class Venue:
         self.lng = lng
         self.image = image
 
+    def has_data(self):
+        return self.name or self.address or self.description
 
 class Event(models.Model):
     id = models.BigIntegerField(primary_key=True)

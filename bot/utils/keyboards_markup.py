@@ -78,7 +78,8 @@ def event_info_keyboard(event):
         items.append(InlineButton(f'Información de {band.name}', InlineButton.BAND_INFO,
                                   data=str(event.id) + '-' + str(band.id)))
 
-    items.append(InlineButton(f'Información del espacio', InlineButton.VENUE_INFO, data=event.id))
+    if event.venue.has_data():
+        items.append(InlineButton(f'Información del espacio', InlineButton.VENUE_INFO, data=event.id))
 
     return create_inline_keyboard(items, 1)
 
