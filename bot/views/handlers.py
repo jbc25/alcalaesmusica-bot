@@ -301,7 +301,6 @@ def any_text(update, context):
                              reply_markup=admin_message_keyboard())
 
 
-
 def data(update, context):
     chat_id = update.effective_chat.id
     is_admin = UserChat.objects.get(id_chat=chat_id).is_admin
@@ -312,7 +311,8 @@ def data(update, context):
         return
 
     user_count = UserChat.objects.all().count()
-    text = f'Número de usuarios: <b>{user_count}</b>'
+    user_active_count = UserChat.objects.filter(is_active=True).count()
+    text = f'Número de usuarios: <b>{user_count}</b> (activos <b>{user_active_count}</b>)'
 
     tags_subscriptions = {}
     tags = Tag.objects.all()

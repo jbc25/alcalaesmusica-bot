@@ -63,7 +63,13 @@ class Command(BaseCommand):
 
             if events_notify:
 
-                prepare_text_and_send(events_notify, '¡Nuevos conciertos!', bot, chat_id)
+                try:
+                    prepare_text_and_send(events_notify, '<b>¡Nuevos conciertos!</b>', bot, chat_id)
+                    events_notified.ids_events = json.dumps(ids_events_notified)
+                    events_notified.save()
+                    user_chat.is_active = True
+                except telegram.error.Unauthorized:
+                    user_chat.is_active = False
 
-                events_notified.ids_events = json.dumps(ids_events_notified)
-                events_notified.save()
+                user_chat.save()
+
