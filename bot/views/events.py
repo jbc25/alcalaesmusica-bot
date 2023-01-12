@@ -53,7 +53,7 @@ def filter_events(tag_id):
         for band in event.bands:
             print(type(band.tag_id))
             print(type(tag_id))
-            if int(band.tag_id) == tag_id:
+            if int(band.tag_id) == tag_id and not event in filtered:
                 filtered.append(event)
     return filtered
 
