@@ -6,7 +6,7 @@ import json
 
 class Festival:
 
-    def __init__(self, id, title, profile_image, start_date, end_date, slug, news_tag):
+    def __init__(self, id, title, profile_image, start_date, end_date, slug, news_tag, has_events=True):
         self.id = id
         self.title = title
         self.profile_image = profile_image
@@ -14,6 +14,7 @@ class Festival:
         self.end_date = end_date
         self.slug = slug
         self.news_tag = news_tag
+        self.has_events = has_events
 
     def get_web_link(self):
         return f'{URL_BASE}/sp/{self.slug}'
@@ -61,6 +62,8 @@ class Festival:
             )
 
             if fest.is_active():
+                from bot.views.events import get_festival_events
+                fest.has_events = len(get_festival_events(fest.id)) > 0
                 festivals.append(fest)
 
         return festivals

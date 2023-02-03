@@ -79,6 +79,27 @@ def get_festival_events(id_fest):
     return filtered
 
 
+def create_custom_festivals():
+    custom_festivals = []
+
+    # Copy paste this block for each custom festival (not included in "microsites")
+    if datetime.now() <= datetime(2022, 6, 5, 23, 59, 59):
+        custom_fest = {
+            'id': 1,
+            'image': 'https://alcalasuena.es/static/img/logo2022.png',
+            'caption': f'<b>Alcalá Suena</b>\n<i>03/06/2022 - 05/06/2022</i>',
+            'buttons': [
+                ('Visitar página web', 'https://alcalasuena.es/'),
+                ('Descargar app Android', 'https://play.google.com/store/apps/details?id=com.triskelapps.alcalasuena'),
+                ('Descargar app iOS', 'https://apps.apple.com/es/app/alcala-suena/id1458551516?l=es&ls=1')
+            ]
+        }
+        custom_festivals.append(custom_fest)
+    # -------
+
+    return custom_festivals
+
+
 def prepare_text(events, initial_text, no_events_text='No hay eventos próximamente'):
     if not events:
         return [no_events_text]

@@ -114,8 +114,10 @@ def venue_info_keyboard(event):
 def fest_keyboard(fest):
     items = [
         InlineButton('Información', InlineButton.URL_BUTTON, url=fest.get_web_link()),
-        InlineButton('Conciertos', InlineButton.FEST_EVENTS, data=fest.id),
     ]
+
+    if fest.has_events:
+        items.append(InlineButton('Conciertos', InlineButton.FEST_EVENTS, data=fest.id))
 
     return create_inline_keyboard(items, 2)
 
