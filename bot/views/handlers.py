@@ -1,20 +1,10 @@
-import telegram
-import requests
-import json
-from bot.models.event import Event
-from bot.models.tag import Tag
-from .events import *
-from datetime import datetime, timedelta
-from bot.utils.keyboards_markup import *
-from bot.models.preference import Preference
-from bot.utils.preference_keys import *
-from bot.models.user_chat import UserChat
-from bot.utils.messages import *
-from bot.views.news import *
-from bot.token import *
 from django.db.models import Count
-from bot.utils.send_msg import send_to_all
+
 from bot.models.analytic import Analytic
+from bot.models.user_chat import UserChat
+from bot.utils.send_msg import send_to_all, send_dev_chat_message
+from bot.views.news import *
+from .events import *
 
 
 def start(update, context):
@@ -56,7 +46,7 @@ def events(update, context):
         events = get_events()
         prepare_text_and_send(events, '', context.bot, update.effective_chat.id, reply_markup=tags_access_keyboard())
     except Exception as e:
-        send_dev_chat_message(context, str(e))
+        send_dev_chat_message(context.bot, str(e))
 
         import traceback
         print(traceback.format_exc())
@@ -87,7 +77,7 @@ def festivals(update, context):
                                    parse_mode="HTML", reply_markup=custom_fest_keyboard(custom_fest['buttons']))
 
     except Exception as e:
-        send_dev_chat_message(context, str(e))
+        send_dev_chat_message(context.bot, str(e))
 
     Analytic.save_analytic(Analytic.TYPE_COMMAND, "festivales")
 
@@ -327,5 +317,3 @@ def data(update, context):
                              reply_markup=telegram.ReplyKeyboardRemove())
 
 
-def send_dev_chat_message(context, message):
-    context.bot.send_message(chat_id=dev_chat_id, text='AemBot dev message:\n' + message)

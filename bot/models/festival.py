@@ -54,7 +54,7 @@ class Festival:
             fest = Festival(
                 fest_api['id'],
                 fest_api['title'],
-                fest_api['profile_image'],
+                fest_api['profile_image'] or fest_api['top_image'] ,
                 fest_api['start_date'],
                 fest_api['end_date'],
                 fest_api['slug'],
