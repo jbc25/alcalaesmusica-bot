@@ -48,11 +48,11 @@ class Command(BaseCommand):
         # This way if there are many festivals to notify at the same time users will have some delays between messages.
         # Many festivals creations at the same time is improbable so this solution is fine at the moment
 
-        for fest in festivals:
+        for fest in festivals_notify:
             send_photo_to_all(bot, fest.get_image_url(), fest.caption(), fest_keyboard(fest), initial_text)
             initial_text = None
 
-        for custom_fest in custom_festivals:
+        for custom_fest in custom_festivals_notify:
             send_photo_to_all(bot, custom_fest['image'], custom_fest['caption'],
                               custom_fest_keyboard(custom_fest['buttons']), initial_text)
             initial_text = None
