@@ -13,8 +13,12 @@ def send_to_all(bot, message):
     for user_chat in user_chats:
         time.sleep(0.3)
         chat_id = user_chat.id_chat
-        bot.send_message(chat_id=chat_id, text=message, parse_mode="HTML",
+
+        try:
+            bot.send_message(chat_id=chat_id, text=message, parse_mode="HTML",
                          disable_web_page_preview=True, reply_markup=telegram.ReplyKeyboardRemove())
+        except telegram.error.TelegramError as e:
+            send_dev_chat_message(bot, "Error al notificar mensaje: {}\nError:\n{}".format(message, e))
 
 
 def send_photo_to_all(bot, photo, caption, reply_markup, initial_text=None):
