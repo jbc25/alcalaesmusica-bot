@@ -17,8 +17,11 @@ def send_to_all(bot, message):
         try:
             bot.send_message(chat_id=chat_id, text=message, parse_mode="HTML",
                          disable_web_page_preview=True, reply_markup=telegram.ReplyKeyboardRemove())
-        except telegram.error.TelegramError as e:
-            print("Error al notificar mensaje: {}\nError:\n{}".format(message, e))
+            user_chat.is_active = True
+        except telegram.error.Unauthorized:
+            user_chat.is_active = False
+
+        user_chat.save()
 
 
 def send_photo_to_all(bot, photo, caption, reply_markup, initial_text=None):
@@ -35,8 +38,11 @@ def send_photo_to_all(bot, photo, caption, reply_markup, initial_text=None):
 
         try:
             bot.send_photo(chat_id=chat_id, photo=photo, caption=caption, parse_mode="HTML", reply_markup=reply_markup)
-        except telegram.error.TelegramError as e:
-            print("Error al notificar festival: {}\nError:\n{}".format(caption, e))
+            user_chat.is_active = True
+        except telegram.error.Unauthorized:
+            user_chat.is_active = False
+
+        user_chat.save()
 
 
 def send_dev_chat_message(bot, message):

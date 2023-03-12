@@ -14,7 +14,10 @@ def start(update, context):
     user_chat = UserChat.objects.filter(id_chat=chat_id).first()
     if not user_chat:
         user_chat = UserChat(id_chat=chat_id)
-        user_chat.save()
+    else:
+        user_chat.is_active = True
+
+    user_chat.save()
 
     events_notified = EventNotified.objects.filter(id_chat=chat_id).first()
     if not events_notified:
