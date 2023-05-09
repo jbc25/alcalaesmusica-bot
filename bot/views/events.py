@@ -83,7 +83,7 @@ def create_custom_festivals():
     custom_festivals = []
 
     # Copy paste this block for each custom festival (not included in "microsites")
-    if datetime.now() <= datetime(2022, 6, 5, 23, 59, 59):
+    if datetime.now() <= datetime(2023, 6, 4, 23, 59, 59):
         custom_fest = {
             'id': 1,
             'image': 'https://alcalasuena.es/static/img/logo2022.png',
