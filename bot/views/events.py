@@ -85,9 +85,9 @@ def create_custom_festivals():
     # Copy paste this block for each custom festival (not included in "microsites")
     if datetime.now() <= datetime(2023, 6, 4, 23, 59, 59):
         custom_fest = {
-            'id': 1,
-            'image': 'https://alcalasuena.es/static/img/logo2022.png',
-            'caption': f'<b>Alcalá Suena</b>\n<i>03/06/2022 - 05/06/2022</i>',
+            'id': 2,
+            'image': 'https://alcalasuena.es/media/news/40124e11-59cb-469e-9315-60967c45bad2.jpg',
+            'caption': f'<b>Alcalá Suena</b>\n<i>02/06/2023 - 04/06/2023</i>',
             'buttons': [
                 ('Visitar página web', 'https://alcalasuena.es/'),
                 ('Descargar app Android', 'https://play.google.com/store/apps/details?id=com.triskelapps.alcalasuena'),
