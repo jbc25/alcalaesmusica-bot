@@ -9,13 +9,14 @@ DATETIME_FORMAT_API = "%Y-%m-%dT%H:%M:%S"
 
 class News:
 
-    def __init__(self, id, title, subtitle, image, publication_date, slug):
+    def __init__(self, id, title, subtitle, image, publication_date, slug, status):
         self.id = id
         self.title = title
         self.subtitle = subtitle
         self.image = image
         self.publication_date = publication_date
         self.slug = slug
+        self.status = status
 
     def get_web_link(self):
         return f'{URL_BASE}/blog/{self.date_url()}/{self.slug}'
@@ -43,9 +44,11 @@ class News:
                 news_api['image'],
                 news_api['publication_date'],
                 news_api['slug'],
+                news_api['status'],
             )
 
-            news_list.append(news)
+            if news.status == 2:   # published
+                news_list.append(news)
 
         news_sorted = sorted(
             news_list,
