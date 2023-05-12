@@ -8,7 +8,7 @@ def send_to_all(bot, message):
     if developing:
         user_chats = UserChat.objects.filter(id_chat=dev_chat_id)
     else:
-        user_chats = UserChat.objects.all()
+        user_chats = UserChat.objects.filter(is_active=True)
 
     for user_chat in user_chats:
         time.sleep(0.3)
@@ -28,7 +28,7 @@ def send_photo_to_all(bot, photo, caption, reply_markup, initial_text=None):
     if developing:
         user_chats = UserChat.objects.filter(id_chat=dev_chat_id)
     else:
-        user_chats = UserChat.objects.all()
+        user_chats = UserChat.objects.filter(is_active=True)
 
     for user_chat in user_chats:
         time.sleep(0.3)
