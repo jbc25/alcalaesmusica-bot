@@ -241,7 +241,8 @@ def news(update, context):
 def add(update, context):
 
     text = "🌐 Pulsa el siguiente botón para abrir la página de añadir evento en la web de Alcalá es Música.\n" \
-           "👥 Si es la primera vez, tendrás que entrar con tu usuario."
+           "👥 Si es la primera vez, tendrás que entrar con tu usuario.\n\n" \
+           "📢 Una vez creado, avisaré en un rato de tu bolo a todo el mundo!"
 
     chat_id = update.effective_chat.id
     context.bot.send_message(chat_id=chat_id, text=text, reply_markup=add_event_keyboard())
