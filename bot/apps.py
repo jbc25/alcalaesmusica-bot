@@ -55,6 +55,8 @@ class BotConfig(AppConfig):
         dispatcher.add_handler(CommandHandler('noticias', handlers.news))
         dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex('^(?i)noticias$'), handlers.news))
 
+        dispatcher.add_handler(CommandHandler('bolo', handlers.add))
+
         dispatcher.add_handler(CommandHandler('cache', handlers.remove_cache))
         dispatcher.add_handler(CommandHandler('datos', handlers.data))
 

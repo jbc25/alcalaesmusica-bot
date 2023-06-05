@@ -134,3 +134,8 @@ def admin_message_keyboard():
     ]
 
     return create_inline_keyboard(items, 2)
+
+
+def add_event_keyboard():
+    items = [InlineButton('Añadir bolo', InlineButton.URL_BUTTON, url='https://alcalaesmusica.org/events/add/')]
+    return create_inline_keyboard(items, 1)

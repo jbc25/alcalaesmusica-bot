@@ -238,6 +238,16 @@ def news(update, context):
     Analytic.save_analytic(Analytic.TYPE_COMMAND, "noticias")
 
 
+def add(update, context):
+
+    text = "🌐 Pulsa el siguiente botón para abrir la página de añadir evento en la web de Alcalá es Música.\n" \
+           "👥 Si es la primera vez, tendrás que entrar con tu usuario."
+
+    chat_id = update.effective_chat.id
+    context.bot.send_message(chat_id=chat_id, text=text, reply_markup=add_event_keyboard())
+
+    Analytic.save_analytic(Analytic.TYPE_COMMAND, "bolo")
+
 def remove_cache(update, context):
     Preference.remove(PREF_EVENTS_CACHE)
     Preference.remove(PREF_CACHE_TIMESTAMP)
