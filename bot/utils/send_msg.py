@@ -1,5 +1,5 @@
 from bot.models.user_chat import UserChat
-from bot.token import *
+from bot.dev_config import *
 import telegram
 import time
 from threading import Thread

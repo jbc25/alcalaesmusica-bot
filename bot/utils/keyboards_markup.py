@@ -1,8 +1,7 @@
 import telegram
-from bot.models.tag import Tag
 from bot.models.event_notices import *
 import json
-from bot.utils.constants import URL_BASE
+from bot.bot_config import URL_BASE
 
 
 class InlineButton:

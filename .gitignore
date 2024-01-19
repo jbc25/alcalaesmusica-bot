@@ -77,5 +77,6 @@ staticfiles/
 core
 
 /config/settings/db.py
+/bot/dev_config.py
+/bot/bot_config.py
 /db.sqlite3
-/bot/token.py

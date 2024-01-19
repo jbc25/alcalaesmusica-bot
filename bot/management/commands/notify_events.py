@@ -1,13 +1,10 @@
-import json
+import time
 
 from django.core.management.base import BaseCommand
 
-from bot.models.tag import Tag
+from bot.dev_config import *
 from bot.models.user_chat import UserChat
-from bot.models.event_notices import *
 from bot.views.events import *
-import time
-from bot.token import *
 
 
 class Command(BaseCommand):

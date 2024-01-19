@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 import logging
 
-from .token import *
+from .bot_config import BOT_TOKEN
 import locale
 
 
@@ -21,7 +21,7 @@ class BotConfig(AppConfig):
 
         locale.setlocale(locale.LC_ALL, "es_ES.UTF-8")
 
-        self.setup(alcala_es_musica_bot_token)
+        self.setup(BOT_TOKEN)
 
     def setup(self, token):
         # Create bot, update queue and dispatcher instances

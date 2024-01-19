@@ -1,12 +1,11 @@
 import requests
-import telegram
 from bot.models.event import Event
 from bot.models.festival import Festival
 from bot.models.preference import Preference
 from datetime import datetime, timedelta
 from bot.utils.preference_keys import *
 from bot.utils.keyboards_markup import *
-from bot.utils.constants import URL_BASE
+from bot.bot_config import URL_BASE
 from bot.utils.messages import *
 
 DATETIME_FORMAT_API = '%Y-%m-%d %H:%M:%S'

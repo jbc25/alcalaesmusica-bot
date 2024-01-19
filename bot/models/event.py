@@ -1,7 +1,7 @@
 import json
 from datetime import datetime, timedelta
 from django.db import models
-from bot.utils.constants import URL_BASE
+from bot.bot_config import URL_BASE
 
 # https://www.programiz.com/python-programming/datetime/strftime
 

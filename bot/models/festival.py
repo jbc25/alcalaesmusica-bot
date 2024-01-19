@@ -1,5 +1,5 @@
 
-from bot.utils.constants import URL_BASE
+from bot.bot_config import URL_BASE
 from datetime import datetime
 import json
 
